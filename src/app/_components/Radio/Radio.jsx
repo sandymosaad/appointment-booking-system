@@ -4,25 +4,34 @@ export default  function Radio({formik}) {
     return <>   
 
 
-<div class={style.roleSelection}>
+<div className={style.roleSelection}>
   <p>Account Type</p>
 
    <input 
    type="radio"
-   name="user_role"
+   name="role"
    onChange={formik.handleChange}
     onBlur={formik.handleBlur}
-    value="Provider"/> 
-  <label> Provider (Book appointments)</label><br/><br/>
+    value="Provider"
+    id='provider'
+    /> 
+  <label htmlFor='provider'> Provider (Book appointments)</label><br/><br/>
 
    <input 
    type="radio" 
-   name="user_role" 
+   name="role" 
    value="Client"
     onChange={formik.handleChange}
     onBlur={formik.handleBlur}
+    id='client'
    /> 
-    <label>Client (Offer appointment slots)</label>
+    <label htmlFor='client'>Client (Offer appointment slots)</label>
+
+  {formik.errors['role']&& formik.touched['role']&&(
+    <p className="error">
+        {formik.errors['role']}
+    </p>)
+    } 
 </div>
 
  </>

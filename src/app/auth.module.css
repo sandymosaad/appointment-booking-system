@@ -1,0 +1,17 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center; 
+  align-items: center;    
+}
+.navigationLink{
+    color: rgb(97, 95, 95);
+    text-decoration: none;
+}
+.navigationLink:hover{
+    color: rgb(34, 33, 33);
+    text-decoration: underline;
+}
+.navigationPara{
+text-align: center;
+}

@@ -9,7 +9,13 @@ export default function InputForm({input, formik }){
             <label className= {'formLabel'}>
                     {label}
             </label>
-            {type === "input" && <Input input={input} formik={formik} />}            
+            {type === "input" && <Input input={input} formik={formik} />}   
+
+            {formik.errors[inputName]&& formik.touched[inputName]&&(
+            <p className="error">
+                {formik.errors[inputName]}
+            </p>)
+            }        
         </div>
     </>
 }

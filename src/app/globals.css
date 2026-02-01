@@ -19,7 +19,7 @@ body {
     width: 50%;
     margin:  auto;
     padding: 2rem;
-    border-radius: 1rem;
+    border-radius: 1rem; 
 }
 
 .inputContainer{
@@ -34,8 +34,8 @@ body {
 }
 
 .formInput {
-    width: 95%;
-    max-width: 70rem;
+    width: 100%;
+    /* max-width: 70rem; */
     padding: 1rem;
     background-color: #f6f5f5;
     border: 1px solid #ccc;
@@ -43,6 +43,13 @@ body {
     font-size: 1.6rem;
 }
 
-.required{
+.required, .error{
     color: red;
+    margin-left: .5rem;
+}
+
+@media screen and (max-width: 540px) {
+  .form {
+    width: 90%;
+  }
 }

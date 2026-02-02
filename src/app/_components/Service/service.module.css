@@ -1,0 +1,17 @@
+
+
+.circleIcon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgb(177, 241, 174);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0 1rem 0;
+}
+
+.circleIcon svg {
+  color: white;
+  font-size: 20px;
+}

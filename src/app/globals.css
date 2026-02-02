@@ -10,3 +10,28 @@ body {
   font-family: Inter, sans-serif;
   font-size: 1.6rem;
 }
+.para{
+  font-size: 2rem;
+  color: #555;
+  max-width: 60rem;
+  margin-bottom: 2.5rem;
+}
+
+/*-----------------------------------------------------------------------*/
+.serviceContainer{
+    display: flex;
+    align-items: center;
+    gap: 10;
+    margin: 1.5rem;
+}
+
+.serviceBody  h3, .serviceBody p{
+    margin: 0%;
+    line-height: 1.2;
+
+}
+@media (mix-width:768px) {
+  .serviceContainer{
+    width: 100%;
+  }
+}

@@ -35,3 +35,46 @@ body {
     width: 100%;
   }
 }
+/*---------------------------------------------------------------*/
+/* FORM*/
+.form{
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 .2rem .8rem rgba(0, 0, 0, 0.1);
+    max-width: 80rem;
+    width: 50%;
+    margin:  auto;
+    padding: 2rem;
+    border-radius: 1rem; 
+}
+
+.inputContainer{
+    margin-bottom: 1.5rem;
+}
+.formLabel{
+   font-size: 1.8rem;
+   font-weight: 40rem;
+   color: #242424;
+   display: block;
+   margin: .5rem 0 ;
+}
+
+.formInput {
+    width: 100%;
+    /* max-width: 70rem; */
+    padding: 1rem;
+    background-color: #f6f5f5;
+    border: 1px solid #ccc;
+    border-radius: .5rem;
+    font-size: 1.6rem;
+}
+
+.required, .error{
+    color: red;
+    margin-left: .5rem;
+}
+
+@media screen and (max-width: 540px) {
+  .form {
+    width: 90%;
+  }
+}

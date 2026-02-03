@@ -17,8 +17,12 @@ return <>
         </div>
 
             <div className={style.navbarButtons}>
-                <Button variant="outlined" sx={{ fontSize: 18 }}> Login</Button>
-                <Button variant="contained" sx={{ fontSize: 18 }}>Get Started</Button>
+                <Link href="/login">
+                    <Button variant="outlined" sx={{ fontSize: 18 }}> Login</Button>
+                </Link>
+                <Link href="/signup">
+                    <Button variant="contained" sx={{ fontSize: 18 }}>Get Started</Button>
+                </Link>
             </div>
         </nav>
     </div>

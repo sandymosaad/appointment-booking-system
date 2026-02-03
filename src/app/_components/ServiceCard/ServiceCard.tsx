@@ -15,3 +15,4 @@ export default function ServiceCard({serviceData}){
     </div>
     </>
 }
+

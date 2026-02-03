@@ -1,0 +1,11 @@
+ .serviceContainerCard{
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 2.5rem;
+    gap:2rem
+ }
+
+ .circleIcon{
+   padding: 1rem;
+   border-radius: 50%;
+ }

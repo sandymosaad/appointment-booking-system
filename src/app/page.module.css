@@ -139,3 +139,107 @@ a.secondary {
     --button-secondary-border: #1a1a1a;
   }
 }
+/*---------------------------------------------------------------------------------------------------------*/
+body{
+  background-color: rgb(242, 242, 243);
+}
+
+.heroSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+  padding: 2rem;
+}
+
+.heroSection h1 {
+  font-size: 5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.heroSection p  {
+  font-size: 2rem;
+  color: #555;
+  max-width: 60rem;
+  margin-bottom: 2.5rem;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+/*-------------------------------------------------------------------------------------------*/
+.featuresSection , .serviceSection, .stepsToWorkSection{
+  width: 70%;
+  margin: 10rem auto;
+  
+}
+.featuresSection h2 , .readyToStartSection h3{
+  text-align: center;
+  font-size: 3.5rem;
+
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: center; 
+  gap: 2rem; 
+}
+
+.para{
+  font-size: 2rem;
+  color: #555;
+  max-width: 60rem;
+  margin-bottom: 2.5rem;
+}
+/*-------------------------------------------------------------------------------------------*/
+.services{
+  display: flex;
+  justify-content: start;
+  gap: 5rem;
+}
+.servicesData{
+  width: 50%;
+}
+.servicesCard , .readyToStartSection{
+     background: white;
+     border-radius: 1rem;
+     border: 1px solid #dfdfdf;
+     width: 50%;
+}
+
+.stepsToWorkSection{
+  text-align: center;
+}
+
+.readyToStartSection{
+    margin: 5rem auto;
+    width: 70%;
+    padding: 2rem;
+    text-align: center;
+}
+
+.readyToStartSection p{
+   font-size: 2rem;
+   color: #555;
+}
+
+@media (max-width:768px) {
+  .services{
+    flex-direction: column;
+  }
+  .servicesData, .servicesCard{
+  width: 100%;
+  }
+  .buttons{
+    flex-direction:column-reverse;
+  }
+
+}

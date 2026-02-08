@@ -10,6 +10,11 @@ body {
   font-family: Inter, sans-serif;
   font-size: 1.6rem;
 }
+
+
+/* .container{
+  margin: 2%;
+} */
 .para{
   font-size: 2rem;
   color: #555;
@@ -42,7 +47,7 @@ body {
     box-shadow: 0 .2rem .8rem rgba(0, 0, 0, 0.1);
     max-width: 80rem;
     width: 50%;
-    margin:  auto;
+    margin: 5rem auto;
     padding: 2rem;
     border-radius: 1rem; 
 }

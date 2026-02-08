@@ -1,0 +1,9 @@
+.container{
+    margin: 5% 10%;
+
+}
+.topCardsContainer{
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 5rem;
+}

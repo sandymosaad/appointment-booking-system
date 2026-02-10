@@ -1,4 +1,4 @@
-.container{
+/* .container{
     margin: 5% 10%;
 
 }
@@ -6,4 +6,12 @@
     display: flex;
     gap: 2rem;
     margin-bottom: 5rem;
+}
+
+ .dashboardLayout{
+    margin: 5% ;
+}  */
+
+body{
+  background-color: rgb(242, 242, 243);
 }

@@ -1,7 +1,8 @@
 import DashboardCard from "../_components/DashboardCard/DashboardCard";
 import styles from "../dashboard.module.css"
-import { topCardsData } from "../_staticData/dashboardData";
-import { Box, Grid } from "@mui/material";
+import { topCardsData, filterSlotsData , importantInfoData } from "../_staticData/dashboardData";
+import { Container, Box, Grid, Button, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
 export const metadata = {
   title: "Provider Dashboard",
@@ -11,17 +12,45 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <Box sx={{ padding: 2, margin: "5% 15%" }}>
-          <Grid container spacing={7}>
+      <body >
+        <Container maxWidth="lg" sx={{ mt: 4 }}>
+          <Grid  spacing={2}  sx={{  display: "flex", flexWrap: "wrap", justifyContent: "space-between" , flexDirection: { xs: "column", md: "row" },  gap: 2 }}>
             {topCardsData.map((card, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                 <DashboardCard card={card} sx={{ height: "100%" }}/>
+              <Grid item xs={12} sm={6} md={4} key={index} sx={{  display: "flex",  justifyContent: "center" }}>
+                <DashboardCard card={card} />
               </Grid>
             ))}
           </Grid>
-        </Box>
-        {children}
+          <Button variant="contained" color="primary" sx={{ mt: 3  , fontSize: 16 }}>
+            <AddIcon sx={{ mr: 1 }} />
+            Create New Slot
+          </Button>
+
+          <Box sx={{ mt: 3, display: "flex", gap: 1, flexWrap: "wrap" ,backgroundColor: "#e7e7e7",  p: 1, borderRadius: 2 , width: "fit-content" }}>
+            {filterSlotsData.map((item, index)=>(
+                <Typography key={index} sx={{fontSize: '1.5rem', p: { xs: 1, sm: 2 } ,"&:hover":{cursor:"pointer", backgroundColor: "#ffffff", borderRadius: 2  }}}>{item.title}</Typography>
+            ))}
+          </Box>
+
+              { children }
+
+          <Box sx={{ mt: 2, backgroundColor: "#ffffff", p: 2, borderRadius: 2 }}>
+            <Typography variant="h4" sx={{ mt: 3 }}>
+              Important Information
+            </Typography>
+
+            {importantInfoData.map((info, index) => (
+              <Typography
+                variant="h6"
+                key={index}
+                sx={{ mt: 1, fontSize: { xs: "1.5rem", sm: "2rem" }, color: 'text.secondary' }}
+              >
+                • {info.title}
+              </Typography>
+            ))}
+          </Box>  
+
+        </Container>
 
       </body>
     </html>

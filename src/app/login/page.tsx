@@ -26,11 +26,11 @@ export default function Login() {
           setError(error.message);
           return;
       }
-    console.log("User signed in successfully:", data);
+   // console.log("User signed in successfully:", data);
     if(data.user.user_metadata.role ==="Provider"){
         router.push('/provider-dashboard')
     }else if (data.user.user_metadata.role === "Client")
-    router.push('/client-dashboard ') 
+    router.push('/client-dashboard') 
   }
   const formik: FormikProps<LoginFormValues> = useFormik<LoginFormValues>({
     initialValues: {

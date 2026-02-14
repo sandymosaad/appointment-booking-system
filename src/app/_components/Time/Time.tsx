@@ -1,41 +1,50 @@
 import { Box, TextField, Typography } from "@mui/material";
-import { useState } from "react";
 
-export default function Time({ label }: { label: string }) {
-  const [time, setTime] = useState("");
-  const [error, setError] = useState("");
+type TimeProps = {
+  label: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  name?: string;
+  error?: string;
+};
 
+export default function Time({
+  label,
+  value,
+  onChange,
+  name,
+  error,
+}: TimeProps) {
   const minTime = "08:00";
   const maxTime = "23:00";
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setTime(value);
-
-    if (value < minTime || value > maxTime) {
-      setError(`Time must be between ${minTime} and ${maxTime}`);
-    } else {
-      setError("");
-    }
-  };
+  const isInvalid =
+    value && (value < minTime || value > maxTime);
 
   return (
     <Box>
       <Typography variant="body2" fontSize={14} sx={{ mb: 1 }}>
         {label}
       </Typography>
+
       <TextField
         fullWidth
         type="time"
         size="medium"
-        value={time}
-        onChange={handleChange}
+        name={name}
+        value={value}
+        onChange={onChange}
         sx={{
           backgroundColor: "#f5f5f5",
           borderRadius: 1,
           "& fieldset": { border: "none" },
         }}
       />
+      {isInvalid && (
+        <Typography variant="body2" color="error" fontSize={12} sx={{ mt: 1 }}>
+          Time must be between 08:00 and 23:00
+        </Typography>
+      )}
       {error && (
         <Typography variant="body2" color="error" fontSize={12} sx={{ mt: 1 }}>
           {error}

@@ -36,3 +36,43 @@ export async function addSlot(slotData: slotData) {
 
     return data;
 }
+// export async function getProviderSlots(providerId: string) {
+//     const { data, error } = await supabase
+//         .from("availability_slots")
+//         .select("*")
+//         .eq("provider_id", providerId)
+//         .order("date", { ascending: true })
+//         .order("start_time", { ascending: true });
+    
+//     if (error) {
+//         console.error("Error fetching provider slots:", error);
+//         throw new Error(error.message);
+//     }
+
+//     return data;
+// }
+
+export async function getProviderSlots(
+  providerId: string,
+  status?: string
+) {
+  let query = supabase
+    .from("availability_slots")
+    .select("*")
+    .eq("provider_id", providerId)
+    .order("date", { ascending: true })
+    .order("start_time", { ascending: true });
+
+  if (status && status !== "all") {
+    query = query.eq("status", status);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error("Error fetching provider slots:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
+}

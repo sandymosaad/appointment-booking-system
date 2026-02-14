@@ -5,10 +5,20 @@ const topCardsData=[
     {title:"Upcoming Bookings", body:"2"},
 ]
 const filterSlotsData=[
-    {title:"Upcoming Appointments"},
-    {title:"Available Slots"},
-    {title:"Today's Schedule"},
-    {title:"All Slots"},
+    {
+        title:"All Slots",
+        status:"all"
+    },
+    {
+        title:"Upcoming Appointments",
+        status:"booked"
+    },
+    {
+        title:"Available Slots",
+        status:"available"
+    },
+    // {title:"Today's Schedule"},
+  
 
 ]
 

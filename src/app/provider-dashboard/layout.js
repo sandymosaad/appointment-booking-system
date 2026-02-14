@@ -15,11 +15,12 @@ import SlotsContainer from "../_components/SlotsContainer/SlotsContainer";
 
 export default function RootLayout({ children }) {
   const [displayCreateSlotModal, setDisplayCreateSlotModal] = useState(false);
+   const [activeIndex, setActiveIndex] = useState(0);
   const [slotsContainer , setSlotsContainer] = useState(<SlotsContainer 
     header={filterSlotsData[0].title} />);
   
-  function handleShowSlots(title){
-    const slotsContainer = <SlotsContainer header={title} />;
+  function handleShowSlots(title, status){
+    const slotsContainer = <SlotsContainer header={title} status={status} />;
     setSlotsContainer(slotsContainer);
   }
   
@@ -44,19 +45,31 @@ export default function RootLayout({ children }) {
           {displayCreateSlotModal && <CreateSlotModal/>}
 
           <Box sx={{ mt: 3, display: "flex", gap: 1, flexWrap: "wrap" ,backgroundColor: "#e7e7e7",  p: 1, borderRadius: 2 , width: "fit-content" }}>
-            {filterSlotsData.map((item, index)=>(
-                <Typography key={index}
-                 sx={{fontSize: '1.5rem',
-                   p: { xs: 1, sm: 2 } ,
-                   "&:hover":{cursor:"pointer",
-                     backgroundColor: "#ffffff", 
-                     borderRadius: 2  }}}
-                     onClick={()=>handleShowSlots(item.title)}
-                     >
-                      {item.title}
-                    </Typography>
-            ))}
-          </Box>
+        {filterSlotsData.map((item, index) => (
+          <Typography
+            key={index}
+            sx={{
+              fontSize: "1.5rem",
+              p: { xs: 1, sm: 2 },
+              borderRadius: 2,
+              cursor: "pointer",
+              backgroundColor: activeIndex === index ? "#ffffff" : "transparent",
+              color:  "inherit",
+              fontWeight: activeIndex === index ? 600 : 400,
+              transition: "all 0.2s",
+              "&:hover": {
+                backgroundColor: "#ffffff",
+              },
+            }}
+            onClick={() => {
+              setActiveIndex(index);
+              handleShowSlots(item.title, item.status);
+            }}
+          >
+            {item.title}
+          </Typography>
+              ))}
+            </Box>
             
             {slotsContainer}
 

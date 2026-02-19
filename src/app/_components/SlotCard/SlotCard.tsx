@@ -1,8 +1,6 @@
 import { Box, Typography, Chip, Button } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-
-
 type SlotType = {
   id: string;
   date: string;
@@ -11,7 +9,7 @@ type SlotType = {
   status: string;
 };
 
-export default function SlotCard({ slot }: { slot: SlotType }) {
+export default function SlotCard({ slot, onDelete }: { slot: SlotType; onDelete: (id: string) => void; }) {
   const formattedDate = new Date(slot.date).toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -31,7 +29,6 @@ export default function SlotCard({ slot }: { slot: SlotType }) {
     booked: "warning",    
     cancelled: "error",   
   } as const;
-
   return (
     <Box
       sx={{
@@ -86,7 +83,9 @@ export default function SlotCard({ slot }: { slot: SlotType }) {
               backgroundColor: "#00acc1",
             },
           }}
-        >
+          onClick={() => onDelete(slot.id)}
+
+          >
           Cancel Slot
         </Button>
       )}

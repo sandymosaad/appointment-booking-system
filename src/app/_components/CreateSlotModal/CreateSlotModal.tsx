@@ -12,7 +12,7 @@ type FormValues = {
   endTime: string;
 };
 
-export default function CreateSlotModal() {
+export default function CreateSlotModal({ slots,onRefresh, onClose }) {
   const [showModal, setShowModal] = useState(true);
   const [loading, setLoading] = useState(false);
 
@@ -24,17 +24,31 @@ export default function CreateSlotModal() {
     try{
         setLoading(true);
         const user = await getLoggedInUser();
-        // console.log("Logged in user:", user);
+        const normalizeTime = (time: string) => time.slice(0, 5);
+        
+        const existingSlot = slots.find((slot) => {
+        return (
+          normalizeTime(slot.start_time) === data.startTime &&
+          normalizeTime(slot.end_time) === data.endTime &&
+          slot.date === data.date
+        );
+        });
+
+        if (existingSlot) {
+          toast.warning("You already have a slot at this time!");
+          return;
+        }
         const slotData = {
           date: data.date,
           start_time: data.startTime,
           end_time: data.endTime,
           provider_id: user?.id,
         };
-        await addSlot(slotData)
 
+        await addSlot(slotData);
         toast.success("Slot created successfully");
-        setShowModal(false);
+        onRefresh();
+        onClose();
       }catch(err){
           console.error("Error creating slot:", err);
           toast.error("Failed to create slot. Please try again.");

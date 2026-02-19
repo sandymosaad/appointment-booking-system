@@ -1,6 +1,7 @@
 import { supabase } from "./supabaseClient";
 import {UserData } from "../interfacees/UserData";
 import { slotData } from "../interfacees/slotData";
+import { toast } from "sonner";
 
 export async function addUser(user: UserData) {
     const { data, error } = await supabase 
@@ -36,21 +37,6 @@ export async function addSlot(slotData: slotData) {
 
     return data;
 }
-// export async function getProviderSlots(providerId: string) {
-//     const { data, error } = await supabase
-//         .from("availability_slots")
-//         .select("*")
-//         .eq("provider_id", providerId)
-//         .order("date", { ascending: true })
-//         .order("start_time", { ascending: true });
-    
-//     if (error) {
-//         console.error("Error fetching provider slots:", error);
-//         throw new Error(error.message);
-//     }
-
-//     return data;
-// }
 
 export async function getProviderSlots(
   providerId: string,
@@ -71,6 +57,20 @@ export async function getProviderSlots(
 
   if (error) {
     console.error("Error fetching provider slots:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function deleteSlot(slotId: string ) {
+  let query = supabase
+    .from("availability_slots")
+    .delete()
+    .eq("id", slotId)
+  const { data, error } = await query;
+  if (error) {
+    console.error("Error deleting slot:", error);
     throw new Error(error.message);
   }
 

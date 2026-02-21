@@ -17,6 +17,20 @@ export async function addUser(user: UserData) {
 
     return data;
 }
+export async function getUser(id:string) {
+    const { data, error } = await supabase 
+        .from("profiles")
+        .select()
+        .eq("id", id)
+        .single();
+    
+    if (error) {
+        console.error("Error fetching user data:", error);
+        throw new Error(error.message);
+    }
+
+    return data;
+}
 
 export async function getLoggedInUser() {
     const { data: { user } } = await supabase.auth.getUser()
@@ -71,6 +85,29 @@ export async function deleteSlot(slotId: string ) {
   const { data, error } = await query;
   if (error) {
     console.error("Error deleting slot:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export async function getSlots(
+  status?: string
+) {
+  let query = supabase
+    .from("availability_slots")
+    .select("*")
+    .order("date", { ascending: true })
+    .order("start_time", { ascending: true });
+
+  if (status && status !== "all") {
+    query = query.eq("status", status);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error("Error fetching provider slots:", error);
     throw new Error(error.message);
   }
 

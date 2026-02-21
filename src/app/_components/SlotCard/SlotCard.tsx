@@ -1,6 +1,8 @@
 import { Box, Typography, Chip, Button } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+
 type SlotType = {
   id: string;
   date: string;
@@ -9,7 +11,8 @@ type SlotType = {
   status: string;
 };
 
-export default function SlotCard({ slot, onDelete }: { slot: SlotType; onDelete: (id: string) => void; }) {
+export default function SlotCard(
+  { slot, onDelete ,isClient }: { slot: SlotType; onDelete: (id: string) => void; isClient:boolean }) {
   const formattedDate = new Date(slot.date).toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -71,11 +74,18 @@ export default function SlotCard({ slot, onDelete }: { slot: SlotType; onDelete:
          <AccessTimeIcon fontSize="medium" sx={{mx:1}}/>
         {formatTime(slot.start_time)} - {formatTime(slot.end_time)}
       </Typography>
-
-      {slot.status === "available" && (
+      {isClient &&
+      <Typography sx={{ mt: 1, fontWeight: 500  ,
+         alignItems:"center", display:"flex", fontSize: { xs: "1rem", sm: "1.5rem" }}}>
+         <PersonOutlineIcon fontSize="medium" sx={{mx:1}}/>
+        {`Provider: Dr.${slot['provider_name'] }`}
+      </Typography>
+      }
+      {slot.status === "available" && !isClient && (
         <Button
           sx={{
             m: 1,
+            mt:3,
             backgroundColor: "#26c6da",
             color: "white",
             fontSize: { xs: "1rem", sm: "1.5rem" },
@@ -89,6 +99,32 @@ export default function SlotCard({ slot, onDelete }: { slot: SlotType; onDelete:
           Cancel Slot
         </Button>
       )}
+      {isClient && <>
+      
+       <Button
+          variant="contained"
+          sx={{
+            mx:1,
+            mt:3,        
+            color: "white",
+            fontSize: { xs: "1rem", sm: "1.5rem" },
+          }}
+          >
+          Reserve Slot
+        </Button>
+        <Button
+          variant="contained"
+          sx={{
+            mt:3,
+            mx:1,
+            color: "white",
+            fontSize: { xs: "1rem", sm: "1.5rem" },
+          }}
+          >
+          Book Now
+        </Button>
+        </>
+        }
     </Box>
   );
 }

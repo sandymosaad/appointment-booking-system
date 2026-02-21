@@ -119,7 +119,8 @@ export default function ProviderDashboard() {
           header={header} 
           slots={slots} 
           onDelete={handleDeleteSlot} 
-          loading={loading} 
+          loading={loading}
+          isClient={false} 
         />
 
         {/* Important Info Footer */}

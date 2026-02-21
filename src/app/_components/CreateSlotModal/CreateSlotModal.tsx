@@ -3,7 +3,7 @@ import Time from "../Time/Time";
 import DateInput from "../Date/Date";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
-import { getLoggedInUser , addSlot } from "../../lib/data-service";
+import { getLoggedInUser , addSlot , getUser} from "../../lib/data-service";
 import { toast } from "sonner";
 
 type FormValues = {
@@ -25,7 +25,7 @@ export default function CreateSlotModal({ slots,onRefresh, onClose }) {
         setLoading(true);
         const user = await getLoggedInUser();
         const normalizeTime = (time: string) => time.slice(0, 5);
-        
+        const userData = await getUser(user.id)
         const existingSlot = slots.find((slot) => {
         return (
           normalizeTime(slot.start_time) === data.startTime &&
@@ -43,6 +43,8 @@ export default function CreateSlotModal({ slots,onRefresh, onClose }) {
           start_time: data.startTime,
           end_time: data.endTime,
           provider_id: user?.id,
+          provider_name: userData?.name,
+
         };
 
         await addSlot(slotData);

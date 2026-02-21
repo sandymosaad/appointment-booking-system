@@ -1,14 +1,14 @@
 "use client"
 import { useState, useEffect } from "react";
-import { Container, Box, Grid, Button, Typography } from "@mui/material";
+import { Container, Box, Button, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { toast } from "sonner";
 
 // Internal Components
-import DashboardCard from "../_components/DashboardCard/DashboardCard";
 import CreateSlotModal from "../_components/CreateSlotModal/CreateSlotModal";
 import SlotsContainer from "../_components/SlotsContainer/SlotsContainer";
-
+import DashboardTopCardsContainer from "../_components/DashboardTopCardsContainer/DashboardTopCardsContainer"
+import FilterTabsContainer from "../_components/FilterTabsContainer/FilterTabsContainer"
 // Data & Services
 import { filterSlotsData, importantInfoData } from "../_staticData/dashboardData";
 import { getProviderSlots, getLoggedInUser, deleteSlot } from "../lib/data-service";
@@ -61,34 +61,32 @@ export default function ProviderDashboard() {
       }
     };
     const todayDate = new Date().toISOString().slice(0, 10);
+   
     const todaySlotsNum = slots.filter(
       (slot) => slot.date === todayDate
     ).length;
+    
     const availableSlotsNum = slots.filter(
       (slot)=> slot.status ==="available"
     ).length;
+    
     const bookedSlotsNum = slots.filter(
       (slot)=> slot.status ==="booked"
     ).length;
 
-    //onsole.log(bookedSlotsNum)
+    const topCardsData=[
+        {title:"Today's Appointments", body:todaySlotsNum},
+        {title:"Available Slots", body:availableSlotsNum},
+        {title:"Upcoming Bookings", body:bookedSlotsNum},
+    ]
 
-const topCardsData=[
-    {title:"Today's Appointments", body:todaySlotsNum},
-    {title:"Available Slots", body:availableSlotsNum},
-    {title:"Upcoming Bookings", body:bookedSlotsNum},
-]
+    function filterTabOnClick (item){
+      setStatus(item.status); 
+      setHeader(item.title); 
+    }
     return (
       <Container maxWidth="lg" sx={{ mt: 4, pb: 6 }}>
-        {/* Statistics Cards */}
-        <Grid  spacing={2}  sx={{  display: "flex", flexWrap: "wrap", justifyContent: "space-between" , flexDirection: { xs: "column", md: "row" },  gap: 2 }}>
-          {topCardsData.map((card, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index} sx={{  display: "flex",  justifyContent: "center" }}>
-              <DashboardCard card={card} loading={loading} />
-            </Grid>
-          ))}
-        </Grid>
-
+        <DashboardTopCardsContainer topCardsData={topCardsData} loading={loading} />
         {/* Action Button */}
         <Button 
           variant="contained"
@@ -99,7 +97,6 @@ const topCardsData=[
           <AddIcon sx={{ mr: 1 }} />
           {displayCreateSlotModal ? "Close Form" : "Create New Slot"}
         </Button>
-
         {/* Modal/Form Section */}
         {displayCreateSlotModal && (
           <CreateSlotModal 
@@ -109,37 +106,13 @@ const topCardsData=[
           />
         )}
 
-        {/* Filter Tabs */}
-        <Box sx={{ 
-          mt: 4, display: "flex", gap: 1, flexWrap: "wrap", 
-          backgroundColor: "#e7e7e7", p: 1, borderRadius: 2, width: "fit-content" 
-        }}>
-          {filterSlotsData.map((item, index) => (
-            <Typography
-              key={index}
-              sx={{
-                fontSize: "1.5rem",
-                p: { xs: 1, sm: 1.5 },
-                borderRadius: 2,
-                cursor: "pointer",
-                backgroundColor: activeIndex === index ? "#ffffff" : "transparent",
-                boxShadow: activeIndex === index ? "0px 2px 4px rgba(0,0,0,0.1)" : "none",
-                fontWeight: activeIndex === index ? 600 : 400,
-                transition: "all 0.2s",
-                "&:hover": { backgroundColor: activeIndex === index ? "#ffffff" : "#f5f5f5" },
-              }}
-              onClick={() => {
-                setActiveIndex(index);
-                setStatus(item.status); 
-                setHeader(item.title); 
-              }}
-            >
-              {item.title}
-            </Typography>
-          ))}
-        </Box>
+        <FilterTabsContainer
+          filterSlotsData={filterSlotsData}
+          filterTabOnClick={filterTabOnClick}
+          activeIndex={activeIndex}
+          setActiveIndex={setActiveIndex}
+        />
 
-        {/* Slots List Section - Now fully reactive to page state */}
         <SlotsContainer 
           header={header} 
           slots={slots} 

@@ -9,8 +9,10 @@ import CreateSlotModal from "../_components/CreateSlotModal/CreateSlotModal";
 import SlotsContainer from "../_components/SlotsContainer/SlotsContainer";
 import DashboardTopCardsContainer from "../_components/DashboardTopCardsContainer/DashboardTopCardsContainer"
 import FilterTabsContainer from "../_components/FilterTabsContainer/FilterTabsContainer"
+import StaticDataContainer from "../_components/StaticDataContainer/StaticDataContainer"
+
 // Data & Services
-import { filterSlotsData, importantInfoData } from "../_staticData/dashboardData";
+import { filterSlotsData, importantInfoData } from "../_staticData/providerDashboardData";
 import { getProviderSlots, getLoggedInUser, deleteSlot } from "../lib/data-service";
 
 export default function ProviderDashboard() {
@@ -121,7 +123,9 @@ export default function ProviderDashboard() {
         />
 
         {/* Important Info Footer */}
-        <Box sx={{ mt: 5, backgroundColor: "#ffffff", p: 3, borderRadius: 2, border: "1px solid #eee" }}>
+        <StaticDataContainer mainTitle="Important Information" data={importantInfoData} />
+
+        {/* <Box sx={{ mt: 5, backgroundColor: "#ffffff", p: 3, borderRadius: 2, border: "1px solid #eee" }}>
           <Typography variant="h4" sx={{ mb: 2, fontWeight: 700 }}>
             Important Information
           </Typography>
@@ -134,7 +138,7 @@ export default function ProviderDashboard() {
               • {info.title}
             </Typography>
           ))}
-        </Box>
+        </Box> */}
       </Container>
     );
 }

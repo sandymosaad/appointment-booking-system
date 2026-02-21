@@ -10,7 +10,7 @@ import CreateSlotModal from "../_components/CreateSlotModal/CreateSlotModal";
 import SlotsContainer from "../_components/SlotsContainer/SlotsContainer";
 
 // Data & Services
-import { topCardsData, filterSlotsData, importantInfoData } from "../_staticData/dashboardData";
+import { filterSlotsData, importantInfoData } from "../_staticData/dashboardData";
 import { getProviderSlots, getLoggedInUser, deleteSlot } from "../lib/data-service";
 
 export default function ProviderDashboard() {
@@ -60,14 +60,31 @@ export default function ProviderDashboard() {
         toast.error("Failed to delete slot on server");
       }
     };
+    const todayDate = new Date().toISOString().slice(0, 10);
+    const todaySlotsNum = slots.filter(
+      (slot) => slot.date === todayDate
+    ).length;
+    const availableSlotsNum = slots.filter(
+      (slot)=> slot.status ==="available"
+    ).length;
+    const bookedSlotsNum = slots.filter(
+      (slot)=> slot.status ==="booked"
+    ).length;
 
+    //onsole.log(bookedSlotsNum)
+
+const topCardsData=[
+    {title:"Today's Appointments", body:todaySlotsNum},
+    {title:"Available Slots", body:availableSlotsNum},
+    {title:"Upcoming Bookings", body:bookedSlotsNum},
+]
     return (
       <Container maxWidth="lg" sx={{ mt: 4, pb: 6 }}>
         {/* Statistics Cards */}
         <Grid  spacing={2}  sx={{  display: "flex", flexWrap: "wrap", justifyContent: "space-between" , flexDirection: { xs: "column", md: "row" },  gap: 2 }}>
           {topCardsData.map((card, index) => (
             <Grid item xs={12} sm={6} md={4} key={index} sx={{  display: "flex",  justifyContent: "center" }}>
-              <DashboardCard card={card} />
+              <DashboardCard card={card} loading={loading} />
             </Grid>
           ))}
         </Grid>

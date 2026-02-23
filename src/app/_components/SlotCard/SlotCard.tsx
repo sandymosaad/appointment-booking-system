@@ -2,6 +2,7 @@ import { Box, Typography, Chip, Button } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import SlotTimer from "../SlotTimer/SlotTimer"
 
 type SlotType = {
   id: string;
@@ -10,9 +11,17 @@ type SlotType = {
   end_time: string;
   status: string;
 };
+interface SlotCardProps {
+  slot: SlotType;
+  onDelete: (id: string) => void;
+  onReserved: (id: string) => void;  
+  isClient: boolean;
+  setNumReservedSlots?: (value: number) => void;
+    refresh?: () => Promise<any[]>;
 
+}
 export default function SlotCard(
-  { slot, onDelete ,isClient }: { slot: SlotType; onDelete: (id: string) => void; isClient:boolean }) {
+  { slot, onDelete ,isClient , onReserved , setNumReservedSlots ,refresh}: SlotCardProps) {
   const formattedDate = new Date(slot.date).toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -26,6 +35,7 @@ export default function SlotCard(
     const hour12 = hours % 12 === 0 ? 12 : hours % 12;
     return `${hour12}:${minutes.toString().padStart(2, "0")} ${period}`;
   };
+  
 
   const statusColor = {
     available: "success", 
@@ -81,6 +91,8 @@ export default function SlotCard(
         {`Provider: Dr.${slot['provider_name'] }`}
       </Typography>
       }
+      {isClient && slot.status === "reserved" &&
+          <SlotTimer id={slot.id} setNumReservedSlots={setNumReservedSlots} refresh= {refresh}/>    }
       {slot.status === "available" && !isClient && (
         <Button
           sx={{
@@ -99,8 +111,7 @@ export default function SlotCard(
           Cancel Slot
         </Button>
       )}
-      {isClient && <>
-      
+      {isClient && slot.status !== "reserved" &&   
        <Button
           variant="contained"
           sx={{
@@ -109,22 +120,23 @@ export default function SlotCard(
             color: "white",
             fontSize: { xs: "1rem", sm: "1.5rem" },
           }}
+          onClick={()=>onReserved(slot.id)}
           >
           Reserve Slot
-        </Button>
-        <Button
+        </Button>    
+        }
+      {isClient && <Button
           variant="contained"
           sx={{
             mt:3,
             mx:1,
             color: "white",
             fontSize: { xs: "1rem", sm: "1.5rem" },
+             ...(slot.status === "reserved" && { width: 1 }),
           }}
           >
           Book Now
-        </Button>
-        </>
-        }
+        </Button>}
     </Box>
   );
 }

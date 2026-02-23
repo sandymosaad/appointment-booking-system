@@ -3,6 +3,9 @@ import {UserData } from "../interfacees/UserData";
 import { slotData } from "../interfacees/slotData";
 import { toast } from "sonner";
 
+type SlotStatus = "available" | "booked" | "reserved" | "past";
+
+
 export async function addUser(user: UserData) {
     const { data, error } = await supabase 
         .from("profiles")
@@ -112,4 +115,43 @@ export async function getSlots(
   }
 
   return data;
+}
+
+export async function updateSlotStatus(
+  slotId: string,
+  status: SlotStatus
+) {
+   let expires_at: Date | null = null;
+   let client_id :string | null =null;
+    if (status === "reserved") {
+      expires_at = new Date(Date.now() + 1 * 60 * 1000);
+      client_id = (await getLoggedInUser()).id
+      console.log(client_id)
+    }
+  const { data, error } = await supabase
+    .from("availability_slots")
+    .update({ status ,expires_at,client_id})   
+    .eq("id", slotId)
+    .select();
+ 
+  if (error) {
+    console.log("Error updating slot:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+export async function getSlot(id:string) {
+    const { data, error } = await supabase 
+        .from("availability_slots")
+        .select()
+        .eq("id", id)
+        .single();
+    
+    if (error) {
+        console.error("Error fetching slot data:", error);
+        throw new Error(error.message);
+    }
+
+    return data;
 }

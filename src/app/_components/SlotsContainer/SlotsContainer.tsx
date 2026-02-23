@@ -3,8 +3,30 @@ import { CircularProgress } from "@mui/material";
 import SlotCard from "../SlotCard/SlotCard";
 
 
-export default function SlotsContainer(
-  { header, slots = [], onDelete, loading , isClient }) {
+interface SlotsContainerProps {
+  header: string;
+  slots?: any[];
+  onDelete?: (id: string) => void;
+  onReserved?: (id: string) => void;
+  onBook?: (id: string) => void;
+  loading?: boolean;
+  isClient?: boolean;
+  setNumReservedSlots?: (value: number) => void;
+  refresh?: () => Promise<any[]>;
+
+}
+
+export default function SlotsContainer({
+  header,
+  slots = [],
+  onDelete,
+  onReserved,
+  onBook,
+  loading,
+  isClient,
+  setNumReservedSlots,
+  refresh
+}: SlotsContainerProps) {
   
   return (
     <Box>
@@ -33,7 +55,14 @@ export default function SlotsContainer(
       ) : (
         <Box sx={{ display:"grid", gap:2, gridTemplateColumns:{xs:"1fr", sm:"1fr 1fr"}}}>
           {slots.map((slot) => (
-             <SlotCard key={slot.id} slot={slot} onDelete={onDelete} isClient={isClient} />
+             <SlotCard key={slot.id}
+              slot={slot}
+               onReserved={onReserved} 
+               onDelete={onDelete} 
+               isClient={isClient}
+               setNumReservedSlots={setNumReservedSlots}
+               refresh={refresh}
+               />
           ))}
         </Box>
       )}

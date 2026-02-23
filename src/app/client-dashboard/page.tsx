@@ -3,7 +3,7 @@ import { Container, Box, Grid, Button, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
-
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
 // Internal Components
 import DashboardTopCardsContainer from "../_components/DashboardTopCardsContainer/DashboardTopCardsContainer"
 import FilterTabsContainer from "../_components/FilterTabsContainer/FilterTabsContainer"
@@ -11,22 +11,27 @@ import StaticDataContainer from "../_components/StaticDataContainer/StaticDataCo
 import SlotsContainer from "../_components/SlotsContainer/SlotsContainer"
 // Data & Services
 import { filterSlotsData,stepsToBook, edgeCases } from "../_staticData/clientDashboardData";
-import { getSlots } from "../lib/data-service";
+import { getSlots , updateSlotStatus, getLoggedInUser} from "../lib/data-service";
 
 export default function ClientDashboard() {
       // 1. Unified State
     const [slots, setSlots] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [status, setStatus] = useState("all");
+    const [loading, setLoading] = useState(true); 
+    const [status, setStatus] = useState("available");
     const [header, setHeader] = useState(filterSlotsData[0].title); 
     const [activeIndex, setActiveIndex] = useState(0);
+    const [showWarning, setShowWarning] = useState(false);
+    const [numReservedSlots, setNumReservedSlots] = useState(0);
 
+    
     // 2. Fetch Logic
     const fetchSlots = async () => {
+          let slotsData: any[] = [];
+
       try {
         setLoading(true);
-        
-        const slotsData = await getSlots(status);
+        slotsData = await getSlots(status);
+        console.log("sandy" +status)
         setSlots(slotsData || []); 
       } catch (error) {
         console.error("Fetch error:", error);
@@ -34,9 +39,21 @@ export default function ClientDashboard() {
       } finally {
         setLoading(false);
       }
+      return slotsData;
     };
     useEffect(() => {
-      fetchSlots();
+      const loadData = async () => {
+        fetchSlots();
+
+        const slotsReserved = await getSlots("reserved");
+
+        if (slotsReserved.length > 0) {
+          setShowWarning(true);
+          setNumReservedSlots(slotsReserved.length)
+        }
+      };
+
+      loadData();
     }, [status]);
 
     const topCardsData=[
@@ -49,9 +66,63 @@ export default function ClientDashboard() {
       setStatus(item.status); 
       setHeader(item.title); 
     }
+    const handleReserveSlot = async (id: string) => {
+      const slot = slots.find((slot) => slot.id === id);
+
+      if (!slot) return;
+
+      const today = new Date().toISOString().slice(0, 10);
+
+      if (slot.date < today) {
+        toast.warning("You cannot reserve a past slot.");
+        return;
+      }
+
+      try {
+        await updateSlotStatus(id, "reserved");
+        fetchSlots();
+
+        const user = await getLoggedInUser();
+        const updatedSlots = await getSlots();
+        const reservedCount = updatedSlots.filter((slot) => {
+          //console.log(user.id , slot.client_id, slot.status )
+          return (
+            //slot.status === "reserved" &&
+            slot.client_id === user.id
+          );
+        });
+        // console.log(updatedSlots)
+        // console.log(reservedCount)
+        setNumReservedSlots(reservedCount.length)
+        setShowWarning(true);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
   return <Container maxWidth="lg" sx={{ mt: 4, pb: 6 }}>
         <DashboardTopCardsContainer topCardsData={topCardsData} loading={false} />
-        
+        {showWarning && numReservedSlots>0 &&
+        <Box
+          sx={{
+            backgroundColor: "warning.light",
+            p: 2,
+            mt: 2,
+            borderRadius: 2,
+            color: "warning.contrastText",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography sx={{ fontSize: "2rem", display: "flex", alignItems: "center" }}>
+            <NewReleasesIcon sx={{ mr: 1 }} />
+            You have {numReservedSlots} reserved slot(s)
+          </Typography>
+
+          <Typography sx={{ fontSize: "1.5rem" }}>
+            Please confirm your booking within 5 minutes or the reservation will expire.
+          </Typography>
+        </Box>}
         <FilterTabsContainer
           filterSlotsData={filterSlotsData}
           filterTabOnClick={filterTabOnClick}
@@ -64,7 +135,10 @@ export default function ClientDashboard() {
           slots={slots}
           isClient ={true}
           onDelete={()=>{}}
+          onReserved={handleReserveSlot}
           loading={loading} 
+          setNumReservedSlots={setNumReservedSlots}
+          refresh={fetchSlots}
         />
         <StaticDataContainer mainTitle="How to Book an Appointment" data={stepsToBook} />
         <StaticDataContainer mainTitle=" Edge Cases Handled" data={edgeCases} />

@@ -3,9 +3,9 @@ import style from "./navbar.module.css"
 import Image from "next/image"
 import Link from "next/link"
 import logo from "../../assets/logo.png"
-import { Button } from '@mui/material';
 import { useEffect, useState } from "react"
 import { supabase } from "../../lib/supabaseClient"
+import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 
 
 export default function Navbar(){
@@ -23,45 +23,44 @@ export default function Navbar(){
 
     },[userName])
 
-    return <>
-        <div className={style.navbarContainer}>
-            <nav className={style.nav}>
-            <div className={style.brand}>
-                {userName? 
-                <div>
-                    <h3>{userRole} Dashboard</h3>
-                    <p>Welcome, {userName}</p>
-                </div>
-                :
-                <Link className={style.navBrandLink} href="/">
-                <Image src={logo} alt="logo" className={style.logo} width={70} quality={100} />
-                <h3>AppointmentHub</h3>
-                </Link>
-                 }
+    return (
+    <AppBar position="static" color="transparent" elevation={0}>
+      <Toolbar className={style.navbarContainer} sx={{ justifyContent: "space-between" }}>
+        <Box display="flex" alignItems="center" gap={2}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+            <Image src={logo} alt="logo" width={70} quality={100} />
+            {!userName && <Typography variant="h6" sx={{ ml: 1 }}>AppointmentHub</Typography>}
+          </Link>
 
-            </div>
+          {userName && (
+            <Box>
+              <Link href={`${userRole.toLowerCase()}-dashboard`} style={{color:"black",textDecoration: "none" }}>
+              <Typography variant="h5">{userRole} Dashboard</Typography>
+              <Typography variant="body2" sx={{fontSize:"1.5rem"}}>Welcome, {userName}</Typography>
+              </Link>  
+              
+            </Box>
+          )}
+        </Box>
 
-            <div className={style.navbarButtons}>
-                {userName?          
-                    <Link href="/">
-                        <Button variant="outlined" sx={{ fontSize: 18 }}> Logout</Button>
-                    </Link>
-                :<>
-                    <Link href="/login">
-                        <Button variant="outlined" sx={{ fontSize: 18 }}> Login</Button>
-                    </Link>
-                    <Link href="/signup">
-                        <Button variant="contained" sx={{ fontSize: 18 }}>Get Started</Button>
-                    </Link>
-                </>
-                }
-            </div>
-                
+        <Box display="flex" gap={2}>
+          {userName ? (
+            <Link href="/">
+              <Button variant="outlined" sx={{ fontSize: 18 }}>Logout</Button>
+            </Link>
+          ) : (
+            <>
+              <Link href="/login">
+                <Button variant="outlined" sx={{ fontSize: 18 }}>Login</Button>
+              </Link>
+              <Link href="/signup">
+                <Button variant="contained" sx={{ fontSize: 18 }}>Get Started</Button>
+              </Link>
+            </>
+          )}
+        </Box>
 
-            </nav>
-        </div>
-
-
-
-        </>
+      </Toolbar>
+    </AppBar>
+  );
 }

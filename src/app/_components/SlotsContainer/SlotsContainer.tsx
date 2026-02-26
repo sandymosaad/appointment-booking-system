@@ -9,6 +9,7 @@ interface SlotsContainerProps {
   onDelete?: (id: string) => void;
   onReserved?: (id: string) => void;
   onBook?: (id: string) => void;
+  onCancelReserved?: (id: string) => void;
   loading?: boolean;
   isClient?: boolean;
   setNumReservedSlots?: (value: number) => void;
@@ -22,12 +23,13 @@ export default function SlotsContainer({
   onDelete,
   onReserved,
   onBook,
+  onCancelReserved,
   loading,
   isClient,
   setNumReservedSlots,
   refresh
 }: SlotsContainerProps) {
-  
+
   return (
     <Box>
      <Box sx={{ mt: 2 }}>
@@ -58,7 +60,9 @@ export default function SlotsContainer({
              <SlotCard key={slot.id}
               slot={slot}
                onReserved={onReserved} 
-               onDelete={onDelete} 
+               onDelete={onDelete}
+               onBook={onBook} 
+               onCancelReserved={onCancelReserved}
                isClient={isClient}
                setNumReservedSlots={setNumReservedSlots}
                refresh={refresh}

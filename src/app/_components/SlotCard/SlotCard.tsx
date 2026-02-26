@@ -14,14 +14,18 @@ type SlotType = {
 interface SlotCardProps {
   slot: SlotType;
   onDelete: (id: string) => void;
-  onReserved: (id: string) => void;  
+  onReserved: (id: string) => void;
+  onBook: (id: string) => void;
+  onCancelReserved:(id: string) => void;
   isClient: boolean;
   setNumReservedSlots?: (value: number) => void;
-    refresh?: () => Promise<any[]>;
+  refresh?: () => Promise<any[]>;
 
 }
 export default function SlotCard(
-  { slot, onDelete ,isClient , onReserved , setNumReservedSlots ,refresh}: SlotCardProps) {
+  { slot, onDelete ,isClient ,
+   onReserved ,onBook, setNumReservedSlots ,
+   refresh , onCancelReserved}: SlotCardProps) {
   const formattedDate = new Date(slot.date).toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -36,8 +40,12 @@ export default function SlotCard(
     return `${hour12}:${minutes.toString().padStart(2, "0")} ${period}`;
   };
   
+const slotDate = new Date(slot.date)
+const now = new Date()
+const diffHours = (slotDate.getTime() - now.getTime()) / (1000 * 60 * 60)
 
-  const statusColor = {
+
+const statusColor = {
     available: "success", 
     booked: "warning",    
     cancelled: "error",   
@@ -111,7 +119,7 @@ export default function SlotCard(
           Cancel Slot
         </Button>
       )}
-      {isClient && slot.status !== "reserved" &&   
+      {isClient && slot.status !== "reserved" && slot.status !== "booked"  &&   
        <Button
           variant="contained"
           sx={{
@@ -125,7 +133,7 @@ export default function SlotCard(
           Reserve Slot
         </Button>    
         }
-      {isClient && <Button
+      {isClient && slot.status !== "booked" &&  <Button
           variant="contained"
           sx={{
             mt:3,
@@ -134,9 +142,32 @@ export default function SlotCard(
             fontSize: { xs: "1rem", sm: "1.5rem" },
              ...(slot.status === "reserved" && { width: 1 }),
           }}
+          onClick={()=>onBook(slot.id)}
           >
           Book Now
         </Button>}
+
+        {isClient && slot.status === "booked" && <>
+        {diffHours <24 ?
+        <Typography sx={{fontSize: { xs: "1rem", sm: "1.5rem" }, p:2, color:"gray"}}>
+          Cannot cancel (less than 24h before appointment)
+        </Typography>:
+         <Button
+          sx={{
+            m: 1,
+            mt:3,
+            backgroundColor: "#26c6da",
+            color: "white",
+            fontSize: { xs: "1rem", sm: "1.5rem" },
+            "&:hover": {
+              backgroundColor: "#00acc1",
+            },
+          }}
+          onClick={() => onCancelReserved(slot.id)}
+          >
+          Cancel Slot
+        </Button>}
+        </>}
     </Box>
   );
 }

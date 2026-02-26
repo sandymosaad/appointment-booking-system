@@ -11,7 +11,7 @@ import StaticDataContainer from "../_components/StaticDataContainer/StaticDataCo
 import SlotsContainer from "../_components/SlotsContainer/SlotsContainer"
 // Data & Services
 import { filterSlotsData,stepsToBook, edgeCases } from "../_staticData/clientDashboardData";
-import { getSlots , updateSlotStatus, getLoggedInUser} from "../lib/data-service";
+import { getSlots, getLoggedInUser , cancelSlotByClient,reserveSlot, bookSlot} from "../lib/data-service";
 
 export default function ClientDashboard() {
       // 1. Unified State
@@ -66,6 +66,7 @@ export default function ClientDashboard() {
       setStatus(item.status); 
       setHeader(item.title); 
     }
+    // Handle Reserve Slot
     const handleReserveSlot = async (id: string) => {
       const slot = slots.find((slot) => slot.id === id);
 
@@ -79,27 +80,54 @@ export default function ClientDashboard() {
       }
 
       try {
-        await updateSlotStatus(id, "reserved");
+        await reserveSlot(id, "reserved");
         fetchSlots();
 
         const user = await getLoggedInUser();
         const updatedSlots = await getSlots();
         const reservedCount = updatedSlots.filter((slot) => {
-          //console.log(user.id , slot.client_id, slot.status )
           return (
-            //slot.status === "reserved" &&
             slot.client_id === user.id
           );
         });
-        // console.log(updatedSlots)
-        // console.log(reservedCount)
+
         setNumReservedSlots(reservedCount.length)
         setShowWarning(true);
       } catch (error) {
         console.error(error);
       }
     };
+    // Handle Book Slot
+    const handleBookSlot = async (id: string) => {
+      const slot = slots.find((slot) => slot.id === id);
 
+      if (!slot) return;
+
+      const today = new Date().toISOString().slice(0, 10);
+
+      if (slot.date < today) {
+        toast.warning("You cannot book a past slot.");
+        return;
+      }
+
+      try {
+        await bookSlot(id, "booked");
+        fetchSlots();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    // Handle cancellation click
+  const handleCancellationSlot = async (id: string) =>{
+     const slot = slots.find((slot) => slot.id === id);
+      if (!slot) return;
+      try {
+        await cancelSlotByClient(id);
+        fetchSlots();
+      } catch (error) {
+        console.error(error);
+      }
+    } 
   return <Container maxWidth="lg" sx={{ mt: 4, pb: 6 }}>
         <DashboardTopCardsContainer topCardsData={topCardsData} loading={false} />
         {showWarning && numReservedSlots>0 &&
@@ -136,6 +164,8 @@ export default function ClientDashboard() {
           isClient ={true}
           onDelete={()=>{}}
           onReserved={handleReserveSlot}
+          onBook = {handleBookSlot}
+          onCancelReserved={handleCancellationSlot}
           loading={loading} 
           setNumReservedSlots={setNumReservedSlots}
           refresh={fetchSlots}

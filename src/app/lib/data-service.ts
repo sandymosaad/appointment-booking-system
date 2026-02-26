@@ -123,11 +123,11 @@ export async function updateSlotStatus(
 ) {
    let expires_at: Date | null = null;
    let client_id :string | null =null;
-    if (status === "reserved") {
-      expires_at = new Date(Date.now() + 1 * 60 * 1000);
-      client_id = (await getLoggedInUser()).id
-      console.log(client_id)
-    }
+    // if (status === "reserved") {
+    //   expires_at = new Date(Date.now() + 1 * 60 * 1000);
+    //   client_id = (await getLoggedInUser()).id
+    //   console.log(client_id)
+    // }
   const { data, error } = await supabase
     .from("availability_slots")
     .update({ status ,expires_at,client_id})   
@@ -136,6 +136,48 @@ export async function updateSlotStatus(
  
   if (error) {
     console.log("Error updating slot:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+export async function reserveSlot(
+  slotId: string,
+  status: SlotStatus
+) {
+   let expires_at: Date | null = null;
+   let client_id :string | null =null;
+
+   expires_at = new Date(Date.now() + 1 * 60 * 1000);
+   client_id = (await getLoggedInUser()).id
+  const { data, error } = await supabase
+    .from("availability_slots")
+    .update({ status ,expires_at,client_id})   
+    .eq("id", slotId)
+    .select();
+ 
+  if (error) {
+    console.log("Error reserve slot:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+export async function bookSlot(
+  slotId: string,
+  status: SlotStatus
+) {
+   let client_id :string | null =null; 
+   client_id = (await getLoggedInUser()).id
+
+  const { data, error } = await supabase
+    .from("availability_slots")
+    .update({ status ,client_id})   
+    .eq("id", slotId)
+    .select();
+ 
+  if (error) {
+    console.log("Error book slot:", error);
     throw new Error(error.message);
   }
 
@@ -154,4 +196,22 @@ export async function getSlot(id:string) {
     }
 
     return data;
+}
+
+export async function cancelSlotByClient(id:string){
+  const { data, error } = await supabase
+    .from("availability_slots")
+    .update({ 
+      status:"available" , 
+      client_id:null
+     })   
+    .eq("id", id)
+    .select();
+ 
+  if (error) {
+    console.log("Error cancel slot:", error);
+    throw new Error(error.message);
+  }
+
+  return data;
 }

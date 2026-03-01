@@ -97,6 +97,8 @@ export async function deleteSlot(slotId: string ) {
 export async function getSlots(
   status?: string
 ) {
+     let client_id :string | null =null;
+     client_id = (await getLoggedInUser()).id
   let query = supabase
     .from("availability_slots")
     .select("*")
@@ -113,8 +115,10 @@ export async function getSlots(
     console.error("Error fetching provider slots:", error);
     throw new Error(error.message);
   }
-
-  return data;
+  const slots = data?.filter(
+    (slot) => slot.status === "available" || slot.client_id === client_id
+  );
+  return slots;
 }
 
 export async function updateSlotStatus(
@@ -172,7 +176,7 @@ export async function bookSlot(
 
   const { data, error } = await supabase
     .from("availability_slots")
-    .update({ status ,client_id})   
+    .update({ status ,client_id ,expires_at:null})   
     .eq("id", slotId)
     .select();
  

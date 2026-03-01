@@ -19,7 +19,7 @@ interface SlotCardProps {
   onCancelReserved:(id: string) => void;
   isClient: boolean;
   setNumReservedSlots?: (value: number) => void;
-  refresh?: () => Promise<any[]>;
+  refresh?: () => void;
 
 }
 export default function SlotCard(

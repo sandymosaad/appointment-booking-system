@@ -1,6 +1,5 @@
 "use client"
 import { Container, Box, Grid, Button, Typography } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
@@ -23,16 +22,31 @@ export default function ClientDashboard() {
     const [showWarning, setShowWarning] = useState(false);
     const [numReservedSlots, setNumReservedSlots] = useState(0);
 
-    
+    const topCardsData=[
+        {title:"Upcoming Bookings", body:"3"},
+        {title:"Reserved (Pending)", body:"2"},
+        {title:"Available Slots", body:"2"},
+    ]
     // 2. Fetch Logic
     const fetchSlots = async () => {
           let slotsData: any[] = [];
-
       try {
         setLoading(true);
         slotsData = await getSlots(status);
-        console.log("sandy" +status)
         setSlots(slotsData || []); 
+        console.log(slotsData)
+        // const user = await getLoggedInUser();
+
+        // const reservedCount = slotsData.filter((slot) => {
+        //   return (
+        //     slot.client_id === user.id && slot.status ==="reserved"
+        //   );
+        // });
+
+        // setNumReservedSlots(reservedCount.length)
+        // if (reservedCount.length >0){
+        //       setShowWarning(true);
+        // }
       } catch (error) {
         console.error("Fetch error:", error);
         toast.error("Failed to load slots");
@@ -43,24 +57,28 @@ export default function ClientDashboard() {
     };
     useEffect(() => {
       const loadData = async () => {
-        fetchSlots();
+        const slots = await fetchSlots();
 
-        const slotsReserved = await getSlots("reserved");
+        // const slotsReserved = await getSlots("reserved");
 
-        if (slotsReserved.length > 0) {
+        // if (slotsReserved.length > 0) {
+        //   setShowWarning(true);
+        //   setNumReservedSlots(slotsReserved.length)
+        // }
+        const user = await getLoggedInUser();
+        const reservedCount = slots.filter((slot) => {
+          return (
+            slot.client_id === user.id && slot.status ==="reserved"
+          );
+        });
+        if (reservedCount.length > 0) {
           setShowWarning(true);
-          setNumReservedSlots(slotsReserved.length)
+          setNumReservedSlots(reservedCount.length)
         }
       };
 
       loadData();
     }, [status]);
-
-    const topCardsData=[
-        {title:"Upcoming Bookings", body:"3"},
-        {title:"Reserved (Pending)", body:"2"},
-        {title:"Available Slots", body:"2"},
-    ]
 
     function filterTabOnClick (item){
       setStatus(item.status); 
@@ -83,15 +101,15 @@ export default function ClientDashboard() {
         await reserveSlot(id, "reserved");
         fetchSlots();
 
-        const user = await getLoggedInUser();
-        const updatedSlots = await getSlots();
-        const reservedCount = updatedSlots.filter((slot) => {
-          return (
-            slot.client_id === user.id
-          );
-        });
+        // const user = await getLoggedInUser();
+        // const updatedSlots = await getSlots();
+        // const reservedCount = updatedSlots.filter((slot) => {
+        //   return (
+        //     slot.client_id === user.id
+        //   );
+        // });
 
-        setNumReservedSlots(reservedCount.length)
+        // setNumReservedSlots(reservedCount.length)
         setShowWarning(true);
       } catch (error) {
         console.error(error);
@@ -112,6 +130,7 @@ export default function ClientDashboard() {
 
       try {
         await bookSlot(id, "booked");
+
         fetchSlots();
       } catch (error) {
         console.error(error);

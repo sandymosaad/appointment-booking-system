@@ -1,13 +1,13 @@
-import Image from "next/image";
+"use client"
 import styles from "./page.module.css";
 import { Button } from "@mui/material";
 
 import Card from "./_components/Card/Card";
 import Service from "./_components/Service/Service"
 import ServiceCard from "./_components/ServiceCard/ServiceCard";
-
+import {getLoggedInUser} from "./lib/data-service"
 import Link from "next/link";
-
+import { useEffect, useState } from "react";
 import {keyFeatures,
   serviceProviders,
   serviceProvidersCards,
@@ -16,20 +16,40 @@ import {keyFeatures,
   stepsToWork } from "./_staticData/landingPageData"
 
 
+
 export default function Home() {
+const [userLoggedIn, setUserLoggedIn] = useState(null);
+const role = userLoggedIn?.user_metadata?.role;
 
+  const dashboardPath = role
+  ? `/${role.toLowerCase()}-dashboard`
+  : "/";
 
+  useEffect( ()=>{
+    const fetchUser = async()=>{
+      const user = await getLoggedInUser()
+      setUserLoggedIn(user ?? null);
+    } ;
+    fetchUser()
+  },[])
   return <>
       <div className={styles.heroSection}>
         <h1>Simplify Your Appointment<br/> Booking</h1>
         <p>A powerful platform connecting service providers with clients. Book <br/> appointments in seconds, manage your schedule effortlessly.</p>
         <div className={styles.buttons}>
+            {!userLoggedIn ? <>
             <Link href="/login">
                 <Button variant="outlined" sx={{ fontSize: 18 }}>Login to Dashboard</Button>   
             </Link>
             <Link href="/signup">
                 <Button variant="contained"  sx={{ fontSize: 18 }}>Sign Up Free</Button>
-            </Link>      
+            </Link>
+            {/* change this */}
+            </> : <Link href={dashboardPath}>
+                <Button variant="outlined" sx={{ fontSize: 18 }}>Go To Dashboard</Button>   
+            </Link>  
+            }
+  
         </div>
       </div>
 

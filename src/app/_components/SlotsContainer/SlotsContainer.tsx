@@ -13,7 +13,7 @@ interface SlotsContainerProps {
   loading?: boolean;
   isClient?: boolean;
   setNumReservedSlots?: (value: number) => void;
-  refresh?: () => Promise<any[]>;
+  refresh?: () => void;
 
 }
 

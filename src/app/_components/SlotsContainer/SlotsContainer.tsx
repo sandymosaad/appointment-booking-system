@@ -14,7 +14,6 @@ interface SlotsContainerProps {
   isClient?: boolean;
   setNumReservedSlots?: (value: number) => void;
   refresh?: () => void;
-
 }
 
 export default function SlotsContainer({
@@ -27,7 +26,7 @@ export default function SlotsContainer({
   loading,
   isClient,
   setNumReservedSlots,
-  refresh
+  refresh,
 }: SlotsContainerProps) {
 
   return (

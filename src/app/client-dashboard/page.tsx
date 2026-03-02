@@ -35,18 +35,6 @@ export default function ClientDashboard() {
         slotsData = await getSlots(status);
         setSlots(slotsData || []); 
         console.log(slotsData)
-        // const user = await getLoggedInUser();
-
-        // const reservedCount = slotsData.filter((slot) => {
-        //   return (
-        //     slot.client_id === user.id && slot.status ==="reserved"
-        //   );
-        // });
-
-        // setNumReservedSlots(reservedCount.length)
-        // if (reservedCount.length >0){
-        //       setShowWarning(true);
-        // }
       } catch (error) {
         console.error("Fetch error:", error);
         toast.error("Failed to load slots");
@@ -59,14 +47,14 @@ export default function ClientDashboard() {
       const loadData = async () => {
         const slots = await fetchSlots();
 
-        // const slotsReserved = await getSlots("reserved");
+        const slotsReserved = await getSlots("reserved");
 
-        // if (slotsReserved.length > 0) {
-        //   setShowWarning(true);
-        //   setNumReservedSlots(slotsReserved.length)
-        // }
+        if (slotsReserved.length<=1) {
+          setShowWarning(false);
+          setNumReservedSlots(0)
+        }
         const user = await getLoggedInUser();
-        const reservedCount = slots.filter((slot) => {
+        const reservedCount = slotsReserved.filter((slot) => {
           return (
             slot.client_id === user.id && slot.status ==="reserved"
           );
@@ -100,16 +88,8 @@ export default function ClientDashboard() {
       try {
         await reserveSlot(id, "reserved");
         fetchSlots();
-
-        // const user = await getLoggedInUser();
-        // const updatedSlots = await getSlots();
-        // const reservedCount = updatedSlots.filter((slot) => {
-        //   return (
-        //     slot.client_id === user.id
-        //   );
-        // });
-
-        // setNumReservedSlots(reservedCount.length)
+        setStatus("reserved")
+        setActiveIndex(2);
         setShowWarning(true);
       } catch (error) {
         console.error(error);
@@ -130,8 +110,9 @@ export default function ClientDashboard() {
 
       try {
         await bookSlot(id, "booked");
-
-        fetchSlots();
+        await fetchSlots();
+        setStatus('booked')
+        setActiveIndex(1);
       } catch (error) {
         console.error(error);
       }
@@ -142,7 +123,9 @@ export default function ClientDashboard() {
       if (!slot) return;
       try {
         await cancelSlotByClient(id);
-        fetchSlots();
+        await fetchSlots();
+        setStatus('available') 
+        setActiveIndex(0);
       } catch (error) {
         console.error(error);
       }
@@ -175,10 +158,11 @@ export default function ClientDashboard() {
           filterTabOnClick={filterTabOnClick}
           activeIndex={activeIndex}
           setActiveIndex={setActiveIndex}
+          setStatus ={setStatus}
         />
 
        <SlotsContainer 
-          header={header} 
+          header={header}
           slots={slots}
           isClient ={true}
           onDelete={()=>{}}

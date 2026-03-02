@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-export default function FilterTabsContainer({filterSlotsData ,activeIndex,setActiveIndex , filterTabOnClick}) {
+export default function FilterTabsContainer({filterSlotsData ,activeIndex,setActiveIndex , filterTabOnClick,setStatus}) {
   
   return (
     <Box sx={{ 
@@ -24,6 +24,7 @@ export default function FilterTabsContainer({filterSlotsData ,activeIndex,setAct
               onClick={() => {
                 setActiveIndex(index);
                 filterTabOnClick(item);
+                setStatus(item.status)
               }}
             >
               {item.title}

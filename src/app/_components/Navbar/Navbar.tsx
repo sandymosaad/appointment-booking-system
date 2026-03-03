@@ -2,7 +2,7 @@
 import style from "./navbar.module.css"
 import Image from "next/image"
 import Link from "next/link"
-import logo from "../../assets/logo.png"
+import logo from "../../assets/appointment-logo.png"
 import { supabase } from "../../lib/supabaseClient"
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import { toast } from "sonner";
@@ -35,7 +35,7 @@ export default function Navbar(){
       <Toolbar className={style.navbarContainer} sx={{ justifyContent: "space-between" }}>
         <Box display="flex" alignItems="center" gap={2}>
           <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-            <Image src={logo} alt="logo" width={70} quality={100} />
+            <Image src={logo} alt="logo" width={40} quality={100} />
             {!userName && <Typography variant="h6" sx={{ ml: 1 }}>AppointmentHub</Typography>}
           </Link>
 
@@ -61,10 +61,12 @@ export default function Navbar(){
           ) : (
             <>
               <Link href="/login">
-                <Button variant="outlined" sx={{ fontSize: 18 }}>Login</Button>
+                <Button variant="outlined" 
+                sx={{ fontSize: 18 ,display: { xs: "none", md: "inline-flex" } }} >Login</Button>
               </Link>
               <Link href="/signup">
-                <Button variant="contained" sx={{ fontSize: 18 }}>Get Started</Button>
+                <Button variant="contained" 
+                sx={{ fontSize: 18 ,display: { xs: "none", md: "inline-flex" } }}>Get Started</Button>
               </Link>
             </>
           )}

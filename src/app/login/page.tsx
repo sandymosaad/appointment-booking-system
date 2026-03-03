@@ -1,5 +1,4 @@
 "use client"
-import React from 'react';
 import { useFormik, FormikProps } from "formik";
 import { inputLoginData, AuthInput } from '../_staticData/authInputData';
 import InputForm from "../_components/InputForm/InputForm";
@@ -26,7 +25,6 @@ export default function Login() {
           setError(error.message);
           return;
       }
-   // console.log("User signed in successfully:", data);
     if(data.user.user_metadata.role ==="Provider"){
         router.push('/provider-dashboard')
     }else if (data.user.user_metadata.role === "Client")

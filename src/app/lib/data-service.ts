@@ -39,7 +39,6 @@ export async function getLoggedInUser() {
     const { data: { user } } = await supabase.auth.getUser()
     return user
 }
-
 export async function addSlot(slotData: slotData) {
     const { data, error } = await supabase 
         .from("availability_slots")

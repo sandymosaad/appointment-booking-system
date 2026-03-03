@@ -3,7 +3,7 @@ import "./globals.css";
 import './theme.css';
 import Navbar from "./_components/Navbar/Navbar";
 import { Toaster } from "sonner";
-
+import {AuthProvider} from "./context/AuthContext"
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -23,10 +23,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Navbar/>
+        <AuthProvider>
+          <Navbar/>
                   {children}
           <Toaster richColors position="top-right" />
-
+      </AuthProvider>
+        
          {/* <div className="container">
                   {children}
         </div> */}

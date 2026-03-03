@@ -34,7 +34,6 @@ export default function ClientDashboard() {
         setLoading(true);
         slotsData = await getSlots(status);
         setSlots(slotsData || []); 
-        console.log(slotsData)
       } catch (error) {
         console.error("Fetch error:", error);
         toast.error("Failed to load slots");

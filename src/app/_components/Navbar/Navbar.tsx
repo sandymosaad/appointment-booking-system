@@ -3,25 +3,32 @@ import style from "./navbar.module.css"
 import Image from "next/image"
 import Link from "next/link"
 import logo from "../../assets/logo.png"
-import { useEffect, useState } from "react"
 import { supabase } from "../../lib/supabaseClient"
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
-
+import { toast } from "sonner";
+import { useRouter } from 'next/navigation';
+import {useAuth} from "../../context/AuthContext"
 
 export default function Navbar(){
-    const [userName, setUserName]=useState("")
-    const [userRole, setUserRole]=useState("")
+    const router = useRouter()
+    const {user , setUser} = useAuth()
 
-    useEffect(()=>{
-        supabase.auth.getSession().then(({data})=>{
-            if(data.session.user){
-                setUserName(data.session.user.user_metadata.full_name);
-                setUserRole(data.session.user.user_metadata.role)
+    const handleLogout = async () => {
+      try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
 
-            }
-        })
+        setUser(null);
+        router.push("/"); 
+      } catch (err: any) {
+        console.error("Logout error:", err.message);
+        toast.error("Error logging out");
+      }
+    };
 
-    },[userName])
+
+    const userName = user?.user_metadata?.full_name;
+    const userRole = user?.user_metadata?.role;
 
     return (
     <AppBar position="static" color="transparent" elevation={0}>
@@ -45,9 +52,12 @@ export default function Navbar(){
 
         <Box display="flex" gap={2}>
           {userName ? (
-            <Link href="/">
-              <Button variant="outlined" sx={{ fontSize: 18 }}>Logout</Button>
-            </Link>
+              <Button variant="outlined" 
+              sx={{ fontSize: 18 }}
+              onClick={handleLogout}
+              >
+                Logout
+              </Button>
           ) : (
             <>
               <Link href="/login">

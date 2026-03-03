@@ -124,6 +124,7 @@ const role = userLoggedIn?.user_metadata?.role;
           <h3>Ready to Get Started?</h3>
           <p >Join thousands of providers and clients managing appointments efficiently</p>
           <div className={styles.buttons}>
+
             <Link href="/signup">
               <Button variant="contained" sx={{ fontSize: 18, ml: 2 }}>
                 Create Free Account

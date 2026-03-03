@@ -170,12 +170,14 @@ export async function bookSlot(
   slotId: string,
   status: SlotStatus
 ) {
-   let client_id :string | null =null; 
-   client_id = (await getLoggedInUser()).id
-
-  const { data, error } = await supabase
+   let client_id :string | null; 
+   let client_name : string | null; 
+   client_id = (await getLoggedInUser()).id;
+   client_name = (await getLoggedInUser()).user_metadata["full_name"];
+    
+   const { data, error } = await supabase
     .from("availability_slots")
-    .update({ status ,client_id ,expires_at:null})   
+    .update({ status ,client_id ,expires_at:null, client_name})   
     .eq("id", slotId)
     .select();
  

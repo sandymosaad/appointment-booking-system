@@ -59,14 +59,14 @@ const statusColor = {
           slot.status === "available"
             ? "#e0f7fa" 
             : slot.status === "booked"
-            ? "#fff3e0" 
-            : "#ffebee", 
+            ? "#ffebee" 
+            : "#fff3e0", 
         border:
           slot.status === "available"
             ? "1px solid #26c6da"
             : slot.status === "booked"
-            ? "1px solid #ffa726"
-            : "1px solid #f44336",
+            ? "1px solid #f44336"
+            : "1px solid #ffa726",
         transition: "transform 0.2s, box-shadow 0.2s",
         "&:hover": {
           transform: "translateY(-2px)",
@@ -92,6 +92,12 @@ const statusColor = {
          <AccessTimeIcon fontSize="medium" sx={{mx:1}}/>
         {formatTime(slot.start_time)} - {formatTime(slot.end_time)}
       </Typography>
+      {!isClient && slot.status!== "available" &&
+        <Typography sx={{ mt: 1, fontWeight: 500  ,
+          alignItems:"center", display:"flex", fontSize: { xs: "1rem", sm: "1.5rem" }}}>
+          <PersonOutlineIcon fontSize="medium" sx={{mx:1}}/>
+          {`Client: ${slot['client_name'] }`}
+        </Typography>}
       {isClient &&
       <Typography sx={{ mt: 1, fontWeight: 500  ,
          alignItems:"center", display:"flex", fontSize: { xs: "1rem", sm: "1.5rem" }}}>
@@ -100,7 +106,10 @@ const statusColor = {
       </Typography>
       }
       {isClient && slot.status === "reserved" &&
-          <SlotTimer id={slot.id} setNumReservedSlots={setNumReservedSlots} refresh= {refresh}/>    }
+          <SlotTimer id={slot.id} 
+          setNumReservedSlots={setNumReservedSlots}
+           refresh= {refresh}/>   
+        }
       {slot.status === "available" && !isClient && (
         <Button
           sx={{

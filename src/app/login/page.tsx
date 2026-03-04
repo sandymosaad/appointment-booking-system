@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '../lib/supabaseClient';
 import { useState } from 'react';
 import {LoginFormValues} from "../interfacees/loginValues"
+import { validationSchema } from '../validations/loginValidtion';
+
 import {
   Container,
   Paper,
@@ -41,6 +43,7 @@ export default function Login() {
       email: "",
       password: "",
     },
+    validationSchema,
     onSubmit: submitLogin,
   });
 
@@ -87,7 +90,10 @@ export default function Login() {
                   },
                   "& .MuiInputLabel-root": {
                     fontSize: "1.2rem",
-                  },
+                  },  
+                  "& .MuiFormHelperText-root": {
+                  fontSize: "1.3rem",
+                  }
                 }}
             />
         ))}
@@ -101,7 +107,7 @@ export default function Login() {
           Login
         </Button>
 
-        {error && <Alert severity="error" sx={{fontSize:"1.3rem"}}>{error}</Alert>}
+        {error && <Alert severity="error" sx={{fontSize:"1.3rem"}}>Missing email or password</Alert>}
 
         <Typography textAlign="center" variant="body2" sx={{fontSize:'1.5rem'}}>
           Don't have an account?{" "}

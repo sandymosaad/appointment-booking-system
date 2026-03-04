@@ -43,7 +43,7 @@ export default function Navbar(){
             <Box>
               <Link href={`${userRole.toLowerCase()}-dashboard`} style={{color:"black",textDecoration: "none" }}>
               <Typography variant="h5">{userRole} Dashboard</Typography>
-              <Typography variant="body2" sx={{fontSize:"1.5rem"}}>Welcome, {userName}</Typography>
+              <Typography variant="body2" sx={{fontSize:"1.5rem"}}>Welcome Dr. {userName}</Typography>
               </Link>  
               
             </Box>

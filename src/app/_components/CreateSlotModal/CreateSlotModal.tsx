@@ -61,17 +61,17 @@ export default function CreateSlotModal({ slots,onRefresh, onClose }) {
 
     if (!showModal) return null;
     return (
-      <Box sx={{ mt: 2, backgroundColor: "#ffffff", p: 4, borderRadius: 2,}}>
+      <Box sx={{ mt: 2, backgroundColor: "#ffffff", p: 4, borderRadius: 2, border:'1px solid #e3e2e2',boxShadow: "0px 2px 8px rgba(0,0,0,0.05)"}}>
         <Typography variant="h5" fontWeight={700} fontSize={20}sx={{ mb: 1 }}>
           Create New Availability Slot
         </Typography>
 
-        <Typography variant="body1" fontSize={14} sx={{mb: 4, color: "text.secondary" }}>
+        <Typography variant="body1" fontSize={17} sx={{mb: 4, color: "text.secondary" }}>
           Set your available time slots for appointments
         </Typography>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{display: "grid",gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr  1fr" },   gap: 4,   mb: 4, }}>
+          <Box sx={{display: "grid",gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr  1fr" },   gap: 4,   mb: 4, }}>
 
             <Controller
               name="date"

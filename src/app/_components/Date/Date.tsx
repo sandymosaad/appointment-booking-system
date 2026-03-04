@@ -19,7 +19,7 @@ export default function DateInput({
 
   return (
     <Box>
-      <Typography variant="body2" fontSize={14} sx={{ mb: 1 }}>
+      <Typography variant="body2" fontSize={18} sx={{ mb: 1 }}>
         {label}
       </Typography>
 
@@ -32,6 +32,7 @@ export default function DateInput({
         onChange={onChange}
         inputProps={{
           min: today,
+          style: { fontSize: "1.6rem" },
         }}
         sx={{
           backgroundColor: "#f5f5f5",
@@ -40,7 +41,7 @@ export default function DateInput({
         }}
       />
        {error && (
-        <Typography variant="body2" color="error" fontSize={12} sx={{ mt: 1 }}>
+        <Typography variant="body2" color="error" fontSize={16} sx={{ mt: 1 }}>
           {error}
         </Typography>
       )}

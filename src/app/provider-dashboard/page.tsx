@@ -23,6 +23,7 @@ export default function ProviderDashboard() {
     const [header, setHeader] = useState(filterSlotsData[0].title); 
     const [displayCreateSlotModal, setDisplayCreateSlotModal] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [allProviderSlots, setAllProviderSlots] = useState<any[]>([]);
 
     // 2. Fetch Logic
     const fetchSlots = async () => {
@@ -30,7 +31,10 @@ export default function ProviderDashboard() {
         setLoading(true);
         const user = await getLoggedInUser();
         if (!user?.id) return;
-        
+
+        const allSlots = await getProviderSlots(user.id); 
+        setAllProviderSlots(allSlots || []);
+
         const slotsData = await getProviderSlots(user.id, status);
         setSlots(slotsData || []); 
       } catch (error) {
@@ -56,6 +60,7 @@ export default function ProviderDashboard() {
       try {
         await deleteSlot(id);
         toast.success("Slot canceled");
+        fetchSlots()
       } catch (error) {
         // Rollback if database fails
         setSlots(previousSlots); 
@@ -64,15 +69,15 @@ export default function ProviderDashboard() {
     };
     const todayDate = new Date().toISOString().slice(0, 10);
    
-    const todaySlotsNum = slots.filter(
+    const todaySlotsNum = allProviderSlots.filter(
       (slot) => slot.date === todayDate
     ).length;
     
-    const availableSlotsNum = slots.filter(
+    const availableSlotsNum = allProviderSlots.filter(
       (slot)=> slot.status ==="available"
     ).length;
     
-    const bookedSlotsNum = slots.filter(
+    const bookedSlotsNum = allProviderSlots.filter(
       (slot)=> slot.status ==="booked"
     ).length;
 
@@ -113,6 +118,7 @@ export default function ProviderDashboard() {
           filterTabOnClick={filterTabOnClick}
           activeIndex={activeIndex}
           setActiveIndex={setActiveIndex}
+          setStatus={setStatus}
         />
 
         <SlotsContainer 

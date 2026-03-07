@@ -13,20 +13,27 @@ import { useClientSlots } from "./useClientSlots";
 
 export default function ClientDashboard() {
       // 1. Unified State
-    const {slots, activeIndex, showWarning, numReservedSlots, setStatus, setActiveIndex,setNumReservedSlots, fetchSlots, handleCancellationSlot, handleReserveSlot, handleBookSlot, loading, setLoading} = useClientSlots('available');     
-    const [header, setHeader] = useState(filterSlotsData[0].title); 
+    const {
+      slots, activeIndex, showWarning, 
+      numReservedSlots, setStatus, setActiveIndex,
+      setNumReservedSlots, fetchSlots,handleCancellationSlot,
+      handleReserveSlot, handleBookSlot, loading, 
+      reservedSlotsNum, bookedSlotsNum ,availableSlotsNum
+    } = useClientSlots('available');     
+    
+       const [header, setHeader] = useState(filterSlotsData[0].title); 
     const topCardsData=[
-        {title:"Upcoming Bookings", body:"3" , path:'client-dashboard/upcoming-bookings'},
-        {title:"Reserved (Pending)", body:"2", path:'client-dashboard/reserved-slots'},
-        {title:"Available Slots", body:"2" , path:'client-dashboard/available-slots'},
+        {title:"Upcoming Bookings", body:bookedSlotsNum , path:'client-dashboard/upcoming-bookings'},
+        {title:"Reserved (Pending)", body:reservedSlotsNum, path:'client-dashboard/reserved-slots'},
+        {title:"Available Slots", body:availableSlotsNum , path:'client-dashboard/available-slots'},
     ]
     function filterTabOnClick (item){
       setStatus(item.status); 
       setHeader(item.title); 
     }
-   
+
   return <Container maxWidth="lg" sx={{ mt: 4, pb: 6 }}>
-        <DashboardTopCardsContainer topCardsData={topCardsData} loading={false} />
+        <DashboardTopCardsContainer topCardsData={topCardsData} loading={loading} />
         {showWarning && numReservedSlots>0 &&
         <Box
           sx={{

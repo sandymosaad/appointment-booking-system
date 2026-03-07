@@ -12,11 +12,18 @@ export function useClientSlots(initialStatus = "available") {
   const [showWarning, setShowWarning] = useState(false);
   const [numReservedSlots, setNumReservedSlots] = useState(0);
   const [loading, setLoading] = useState(true); 
-
+  const [userId, setUserId]= useState(null)
   const pathname = usePathname();
+  const [allUserSlots, setAllUserSlots] = useState<any[]>([]);
+
   const fetchSlots = async () => {
     try {
       setLoading(true);
+       const user = await getLoggedInUser();
+      setUserId(user.id)
+      const allSlots = await getSlots(); 
+      setAllUserSlots(allSlots || []);
+
       const slotsData = await getSlots(status);
       setSlots(slotsData || []);
       return slotsData || [];
@@ -34,10 +41,9 @@ export function useClientSlots(initialStatus = "available") {
       const slotsData = await fetchSlots();
 
       const slotsReserved = await getSlots("reserved");
-      const user = await getLoggedInUser();
-
+     
       const reservedCount = slotsReserved.filter(
-        (slot) => slot.client_id === user.id && slot.status === "reserved"
+        (slot) => slot.client_id === userId && slot.status === "reserved"
       );
 
       if (reservedCount.length > 0) {
@@ -124,6 +130,19 @@ export function useClientSlots(initialStatus = "available") {
     }
   };
 
+  const availableSlotsNum = allUserSlots.filter(
+    (slot)=> slot.status ==="available").length;
+    
+  const bookedSlotsNum = allUserSlots.filter(
+      (slot)=> slot.status ==="booked"&&
+    slot.client_id === userId 
+    ).length;
+
+  const reservedSlotsNum = allUserSlots.filter(
+      (slot)=> slot.status ==="reserved" &&
+    slot.client_id === userId 
+    ).length;
+
   return {
     slots,
     status,
@@ -140,6 +159,9 @@ export function useClientSlots(initialStatus = "available") {
     handleReserveSlot,
     handleBookSlot,
     loading,
-    setLoading
+    setLoading,
+    availableSlotsNum,
+    bookedSlotsNum,
+    reservedSlotsNum
   };
 }

@@ -26,7 +26,7 @@ export default function SlotsContainer({
   loading,
   isClient,
   setNumReservedSlots,
-  refresh,
+  refresh, 
 }: SlotsContainerProps) {
 
   return (

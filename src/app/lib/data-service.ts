@@ -1,7 +1,6 @@
 import { supabase } from "./supabaseClient";
 import {UserData } from "../interfacees/UserData";
 import { slotData } from "../interfacees/slotData";
-import { toast } from "sonner";
 
 type SlotStatus = "available" | "booked" | "reserved" | "past";
 

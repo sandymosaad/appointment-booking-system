@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useState } from "react";
 import { Typography } from "@mui/material";
 import { updateSlotStatus, getSlot } from "../../lib/data-service";

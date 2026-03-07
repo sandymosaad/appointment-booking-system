@@ -30,7 +30,7 @@
     "**/*.mts",
     "**/*.ts",
     "**/*.tsx"
-, "src/app/provider-dashboard/layout.js"  ],
+, "src/app/provider-dashboard/layout.js", "src/middleware.js"  ],
   "exclude": [
     "node_modules"
   ]

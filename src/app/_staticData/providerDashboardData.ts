@@ -10,6 +10,10 @@ const filterSlotsData=[
     {
         title:"Available Slots",
         status:"available"
+    },   
+    {
+        title:"Cancelled Slots",
+        status:"cancelled"
     },
 ]
 

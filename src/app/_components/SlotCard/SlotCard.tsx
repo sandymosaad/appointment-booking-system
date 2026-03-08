@@ -62,7 +62,9 @@
               ? "#ffebee" 
               : slot.status === "reserved"
               ? "#fff3e0"
-              :"#ececec",
+              : slot.status === "past"
+              ?"#ececec"
+              :"#f59c9c",
           border:
             slot.status === "available"
               ? "1px solid #26c6da"
@@ -70,7 +72,9 @@
               ? "1px solid #f44336"
               : slot.status === "reserved"
               ? "1px solid #ffa726"
-              :"1px solid #7a7979",
+              :slot.status === "past"
+              ?"1px solid #7a7979"
+              :"1px solid #f50303",
           transition: "transform 0.2s, box-shadow 0.2s",
           "&:hover": {
             transform: "translateY(-2px)",
@@ -116,18 +120,14 @@
           }
         {slot.status === "available" && !isClient && (
           <Button
+            variant="contained"
             sx={{
               m: 1,
               mt:3,
-              backgroundColor: "#26c6da",
               color: "white",
               fontSize: { xs: "1rem", sm: "1.5rem" },
-              "&:hover": {
-                backgroundColor: "#00acc1",
-              },
             }}
             onClick={() => onDelete(slot.id)}
-
             >
             Cancel Slot
           </Button>
@@ -146,7 +146,8 @@
             Reserve Slot
           </Button>    
           }
-        {isClient && slot.status !== "booked"  && slot.status !== "past" &&  <Button
+        {isClient && slot.status !== "booked"  && slot.status !== "past" && 
+         <Button
             variant="contained"
             sx={{
               mt:3,
@@ -160,7 +161,7 @@
             Book Now
           </Button>}
 
-          {isClient && slot.status === "booked" && <>
+          { slot.status === "booked" && <>
           {diffHours <24 ?
           <Typography sx={{fontSize: { xs: "1rem", sm: "1.5rem" }, p:2, color:"gray"}}>
             Cannot cancel (less than 24h before appointment)

@@ -3,10 +3,9 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { usePathname } from "next/navigation";
 
-import {getSlots, getProviderSlots, getLoggedInUser, deleteSlot } from "../lib/data-service";
+import {getProviderSlots, getLoggedInUser, deleteSlot,
+   cancelSlotByProvider } from "../lib/data-service";
 
-// Data & Services
-import { filterSlotsData } from "../_staticData/providerDashboardData";
 
 export function useProviderSlots(initialStatus = "all") {
      // 1. Unified State
@@ -15,6 +14,7 @@ export function useProviderSlots(initialStatus = "all") {
     const [status, setStatus] = useState(initialStatus);
     const [activeIndex, setActiveIndex] = useState(0);
     const [allProviderSlots, setAllProviderSlots] = useState<any[]>([]);
+    const pathname = usePathname();
 
     // 2. Fetch Logic
     const fetchSlots = async () => {
@@ -72,6 +72,25 @@ export function useProviderSlots(initialStatus = "all") {
       (slot)=> slot.status ==="booked"
     ).length;
 
+      // Cancel Slot
+      const handleCancellationSlot = async (id: string) => {
+        const slot = slots.find((slot) => slot.id === id);
+        if (!slot) return;
+    
+        try {
+          await cancelSlotByProvider(id);
+          await fetchSlots();
+          
+          if (pathname === "/provider-dashboard" ) {
+          setStatus("canceled");
+          setActiveIndex(0);
+          }
+          toast.success("Slot canceled successfully.");
+    
+        } catch (error) {
+          console.error(error);
+        }
+      };
   return {
     slots,
     status,
@@ -86,6 +105,7 @@ export function useProviderSlots(initialStatus = "all") {
     availableSlotsNum,
     bookedSlotsNum,
     todaySlotsNum,
-    todaySlots
+    todaySlots,
+    handleCancellationSlot
   };
 }

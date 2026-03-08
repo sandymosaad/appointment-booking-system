@@ -217,6 +217,21 @@ export async function cancelSlotByClient(id:string){
     console.log("Error cancel slot:", error);
     throw new Error(error.message);
   }
+}
 
+export async function cancelSlotByProvider(id:string){
+  const { data, error } = await supabase
+    .from("availability_slots")
+    .update({ 
+      status:"cancelled" , 
+      client_id:null
+     })   
+    .eq("id", id)
+    .select();
+ 
+  if (error) {
+    console.log("Error cancel slot:", error);
+    throw new Error(error.message);
+  }
   return data;
 }

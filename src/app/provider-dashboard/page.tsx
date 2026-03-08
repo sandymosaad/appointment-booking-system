@@ -12,15 +12,13 @@ import StaticDataContainer from "../_components/StaticDataContainer/StaticDataCo
 
 // Data & Services
 import { filterSlotsData, importantInfoData } from "../_staticData/providerDashboardData";
-
 import {useProviderSlots} from "./useProviderSlots"
 export default function ProviderDashboard() {
     const {
       slots, activeIndex, setStatus, setActiveIndex,
-      fetchSlots, loading, handleDeleteSlot,
+      fetchSlots, loading, handleDeleteSlot,handleCancellationSlot,
       availableSlotsNum, bookedSlotsNum, todaySlotsNum
       } = useProviderSlots('all')
-
     const [header, setHeader] = useState(filterSlotsData[0].title); 
     const [displayCreateSlotModal, setDisplayCreateSlotModal] = useState(false);
    
@@ -69,7 +67,8 @@ export default function ProviderDashboard() {
           slots={slots} 
           onDelete={handleDeleteSlot} 
           loading={loading}
-          isClient={false} 
+          isClient={false}
+          onCancelReserved={handleCancellationSlot} 
         />
 
         {/* Important Info Footer */}

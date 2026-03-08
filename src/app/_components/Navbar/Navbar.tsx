@@ -21,7 +21,7 @@ export default function Navbar(){
         setUser(null);
         router.push("/"); 
       } catch (err: any) {
-        console.error("Logout error:", err.message);
+        console.log("Logout error:", err.message);
         toast.error("Error logging out");
       }
     };

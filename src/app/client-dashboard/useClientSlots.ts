@@ -81,7 +81,7 @@ export function useClientSlots(initialStatus = "available") {
   // Reserve Slot
   const handleReserveSlot = async (id: string) => {
     const slot = slots.find((slot) => slot.id === id);
-    if (!slot) return;
+   
 
     const today = new Date().toISOString().slice(0, 10);
     if (slot.date < today) {
@@ -101,14 +101,15 @@ export function useClientSlots(initialStatus = "available") {
     toast.success("Slot reserved successfully.");
 
     } catch (error) {
+      toast.error("This slot is no longer available.");
       console.error(error);
+      await fetchSlots();
     }
   };
 
   // Book Slot
   const handleBookSlot = async (id: string) => {
     const slot = slots.find((slot) => slot.id === id);
-    if (!slot) return;
 
     const today = new Date().toISOString().slice(0, 10);
     if (slot.date < today) {
@@ -117,6 +118,7 @@ export function useClientSlots(initialStatus = "available") {
     }
 
     try {
+      //await fetchSlots();
       await bookSlot(id, "booked");
       await fetchSlots();
       if (pathname === "/client-dashboard") {
@@ -126,7 +128,10 @@ export function useClientSlots(initialStatus = "available") {
       toast.success("Slot booked successfully.");
 
     } catch (error) {
+      toast.error("This slot is no longer available.");
+
       console.error(error);
+      await fetchSlots();
     }
   };
 

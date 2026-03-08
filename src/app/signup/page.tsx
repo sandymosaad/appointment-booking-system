@@ -44,9 +44,8 @@ export default function SignUp() {
                     role: values.role,
                     password: values.password
                 });
-            //console.log(values)
-               //console.log("Profile created successfully");
-                router.push('/login');
+                const role= (values.role).toLocaleLowerCase()
+                router.push(`${role}-dashboard`);
             } catch (err) {
                 console.log("Profile creation failed:", err);
             }

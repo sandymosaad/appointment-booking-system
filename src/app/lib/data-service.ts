@@ -160,6 +160,7 @@ export async function reserveSlot(
     .from("availability_slots")
     .update({ status ,expires_at,client_id})   
     .eq("id", slotId)
+    .eq("status", "available")
     .select();
  
   if (error) {
@@ -167,7 +168,11 @@ export async function reserveSlot(
     throw new Error(error.message);
   }
 
-  return data;
+  if (!data || data.length === 0) {
+    throw new Error("This slot was just reserved by another user.");
+  }
+
+  return data[0];
 }
 export async function bookSlot(
   slotId: string,
@@ -182,14 +187,20 @@ export async function bookSlot(
     .from("availability_slots")
     .update({ status ,client_id ,expires_at:null, client_name})   
     .eq("id", slotId)
+    .eq("status", "available")
     .select();
  
-  if (error) {
+if (error) {
     console.log("Error book slot:", error);
     throw new Error(error.message);
   }
 
-  return data;
+  // If data is empty, it means the .eq("status", "available") filter failed
+  if (!data || data.length === 0) {
+    throw new Error("This slot was just taken by another user.");
+  }
+
+  return data[0];
 }
 export async function getSlot(id:string) {
     const { data, error } = await supabase 

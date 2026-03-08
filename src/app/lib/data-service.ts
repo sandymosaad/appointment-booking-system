@@ -61,6 +61,7 @@ export async function getProviderSlots(
     .from("availability_slots")
     .select("*")
     .eq("provider_id", providerId)
+    .neq("status", "past")
     .order("date", { ascending: true })
     .order("start_time", { ascending: true });
 

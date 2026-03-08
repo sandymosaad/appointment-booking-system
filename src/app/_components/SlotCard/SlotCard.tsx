@@ -60,13 +60,17 @@
               ? "#e0f7fa" 
               : slot.status === "booked"
               ? "#ffebee" 
-              : "#fff3e0", 
+              : slot.status === "reserved"
+              ? "#fff3e0"
+              :"#ececec",
           border:
             slot.status === "available"
               ? "1px solid #26c6da"
               : slot.status === "booked"
               ? "1px solid #f44336"
-              : "1px solid #ffa726",
+              : slot.status === "reserved"
+              ? "1px solid #ffa726"
+              :"1px solid #7a7979",
           transition: "transform 0.2s, box-shadow 0.2s",
           "&:hover": {
             transform: "translateY(-2px)",
@@ -128,7 +132,7 @@
             Cancel Slot
           </Button>
         )}
-        {isClient && slot.status !== "reserved" && slot.status !== "booked"  &&   
+        {isClient && slot.status !== "reserved" && slot.status !== "booked"  && slot.status !== "past"   &&   
         <Button
             variant="contained"
             sx={{
@@ -142,7 +146,7 @@
             Reserve Slot
           </Button>    
           }
-        {isClient && slot.status !== "booked" &&  <Button
+        {isClient && slot.status !== "booked"  && slot.status !== "past" &&  <Button
             variant="contained"
             sx={{
               mt:3,
@@ -162,15 +166,12 @@
             Cannot cancel (less than 24h before appointment)
           </Typography>:
           <Button
+          variant="contained"
             sx={{
               m: 1,
               mt:3,
-              backgroundColor: "#26c6da",
               color: "white",
               fontSize: { xs: "1rem", sm: "1.5rem" },
-              "&:hover": {
-                backgroundColor: "#00acc1",
-              },
             }}
             onClick={() => onCancelReserved(slot.id)}
             >

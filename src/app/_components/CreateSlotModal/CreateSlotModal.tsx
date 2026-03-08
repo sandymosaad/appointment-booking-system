@@ -26,6 +26,7 @@ export default function CreateSlotModal({ slots,onRefresh, onClose }) {
         const user = await getLoggedInUser();
         const normalizeTime = (time: string) => time.slice(0, 5);
         const userData = await getUser(user.id)
+
         const existingSlot = slots.find((slot) => {
         return (
           normalizeTime(slot.start_time) === data.startTime &&
@@ -33,10 +34,17 @@ export default function CreateSlotModal({ slots,onRefresh, onClose }) {
           slot.date === data.date
         );
         });
-
         if (existingSlot) {
           toast.warning("You already have a slot at this time!");
           return;
+        }
+
+        const now = new Date();
+        now.setSeconds(0, 0);
+        const slotDateTime = new Date(`${data.date} ${data.startTime}`);        
+        if (slotDateTime < now) {
+            toast.warning("You cannot create a slot in the past!");
+            return; 
         }
         const slotData = {
           date: data.date,

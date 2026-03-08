@@ -1,6 +1,7 @@
 import { supabase } from "./supabaseClient";
 import {UserData } from "../interfacees/UserData";
 import { slotData } from "../interfacees/slotData";
+import { toast } from "sonner";
 
 type SlotStatus = "available" | "booked" | "reserved" | "past";
 
@@ -39,6 +40,7 @@ export async function getLoggedInUser() {
     return user
 }
 export async function addSlot(slotData: slotData) {
+
     const { data, error } = await supabase 
         .from("availability_slots")
         .insert([slotData])
@@ -46,7 +48,8 @@ export async function addSlot(slotData: slotData) {
         .single();
     
     if (error) {
-        console.error("Error inserting new slot:", error);
+      toast.error(`Error inserting new slot:${error}`)
+        console.log("Error inserting new slot:", error);
         throw new Error(error.message);
     }
 

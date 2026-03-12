@@ -1,83 +1,31 @@
 "use client"
-import { useState, useEffect } from "react";
-import { Container, Box, Button, Typography } from "@mui/material";
+import { useState } from "react";
+import { Container, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { toast } from "sonner";
 
 // Internal Components
 import CreateSlotModal from "../_components/CreateSlotModal/CreateSlotModal";
 import SlotsContainer from "../_components/SlotsContainer/SlotsContainer";
 import DashboardTopCardsContainer from "../_components/DashboardTopCardsContainer/DashboardTopCardsContainer"
 import FilterTabsContainer from "../_components/FilterTabsContainer/FilterTabsContainer"
-// Data & Services
-import { filterSlotsData, importantInfoData } from "../_staticData/dashboardData";
-import { getProviderSlots, getLoggedInUser, deleteSlot } from "../lib/data-service";
+import StaticDataContainer from "../_components/StaticDataContainer/StaticDataContainer"
 
+// Data & Services
+import { filterSlotsData, importantInfoData } from "../_staticData/providerDashboardData";
+import {useProviderSlots} from "./useProviderSlots"
 export default function ProviderDashboard() {
-    // 1. Unified State
-    const [slots, setSlots] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [status, setStatus] = useState("all");
+    const {
+      slots, activeIndex, setStatus, setActiveIndex,
+      fetchSlots, loading, handleDeleteSlot,handleCancellationSlot,
+      availableSlotsNum, bookedSlotsNum, todaySlotsNum
+      } = useProviderSlots('all')
     const [header, setHeader] = useState(filterSlotsData[0].title); 
     const [displayCreateSlotModal, setDisplayCreateSlotModal] = useState(false);
-    const [activeIndex, setActiveIndex] = useState(0);
-
-    // 2. Fetch Logic
-    const fetchSlots = async () => {
-      try {
-        setLoading(true);
-        const user = await getLoggedInUser();
-        if (!user?.id) return;
-        
-        const slotsData = await getProviderSlots(user.id, status);
-        setSlots(slotsData || []); 
-      } catch (error) {
-        console.error("Fetch error:", error);
-        toast.error("Failed to load slots");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Re-run fetch when filter (status) changes
-    useEffect(() => {
-      fetchSlots();
-    }, [status]);
-
-    // 3. Instant (Optimistic) Deletion
-    const handleDeleteSlot = async (id) => {
-      const previousSlots = [...slots];
-      
-      // Update UI immediately
-      setSlots(slots.filter(s => s.id !== id));
-      
-      try {
-        await deleteSlot(id);
-        toast.success("Slot canceled");
-      } catch (error) {
-        // Rollback if database fails
-        setSlots(previousSlots); 
-        toast.error("Failed to delete slot on server");
-      }
-    };
-    const todayDate = new Date().toISOString().slice(0, 10);
    
-    const todaySlotsNum = slots.filter(
-      (slot) => slot.date === todayDate
-    ).length;
-    
-    const availableSlotsNum = slots.filter(
-      (slot)=> slot.status ==="available"
-    ).length;
-    
-    const bookedSlotsNum = slots.filter(
-      (slot)=> slot.status ==="booked"
-    ).length;
-
     const topCardsData=[
-        {title:"Today's Appointments", body:todaySlotsNum},
-        {title:"Available Slots", body:availableSlotsNum},
-        {title:"Upcoming Bookings", body:bookedSlotsNum},
+        {title:"Today's Appointments", body:todaySlotsNum ,path:"/provider-dashboard/today-slots"},
+        {title:"Available Slots", body:availableSlotsNum, path:"/provider-dashboard/available-slots"},
+        {title:"Upcoming Bookings", body:bookedSlotsNum, path:"/provider-dashboard/booked-slots"},
     ]
 
     function filterTabOnClick (item){
@@ -111,30 +59,20 @@ export default function ProviderDashboard() {
           filterTabOnClick={filterTabOnClick}
           activeIndex={activeIndex}
           setActiveIndex={setActiveIndex}
+          setStatus={setStatus}
         />
 
         <SlotsContainer 
           header={header} 
           slots={slots} 
           onDelete={handleDeleteSlot} 
-          loading={loading} 
+          loading={loading}
+          isClient={false}
+          onCancelReserved={handleCancellationSlot} 
         />
 
         {/* Important Info Footer */}
-        <Box sx={{ mt: 5, backgroundColor: "#ffffff", p: 3, borderRadius: 2, border: "1px solid #eee" }}>
-          <Typography variant="h4" sx={{ mb: 2, fontWeight: 700 }}>
-            Important Information
-          </Typography>
-          {importantInfoData.map((info, index) => (
-            <Typography
-              key={index}
-              variant="body1"
-              sx={{ mt: 1, fontSize: { xs: "1.5rem", sm: "2rem" }, color: 'text.secondary' }}
-            >
-              • {info.title}
-            </Typography>
-          ))}
-        </Box>
+        <StaticDataContainer mainTitle="Important Information" data={importantInfoData} />
       </Container>
     );
 }

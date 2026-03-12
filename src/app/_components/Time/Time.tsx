@@ -23,7 +23,7 @@ export default function Time({
 
   return (
     <Box>
-      <Typography variant="body2" fontSize={14} sx={{ mb: 1 }}>
+      <Typography variant="body2" fontSize={18} sx={{ mb: 1 }}>
         {label}
       </Typography>
 
@@ -34,6 +34,9 @@ export default function Time({
         name={name}
         value={value}
         onChange={onChange}
+        inputProps={{
+          style: { fontSize: "1.6rem" },
+        }}
         sx={{
           backgroundColor: "#f5f5f5",
           borderRadius: 1,
@@ -41,12 +44,12 @@ export default function Time({
         }}
       />
       {isInvalid && (
-        <Typography variant="body2" color="error" fontSize={12} sx={{ mt: 1 }}>
+        <Typography variant="body2" color="error" fontSize={16} sx={{ mt: 1 }}>
           Time must be between 08:00 and 23:00
         </Typography>
       )}
       {error && (
-        <Typography variant="body2" color="error" fontSize={12} sx={{ mt: 1 }}>
+        <Typography variant="body2" color="error" fontSize={16} sx={{ mt: 1 }}>
           {error}
         </Typography>
       )}

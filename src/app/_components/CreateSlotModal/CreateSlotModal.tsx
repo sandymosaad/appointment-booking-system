@@ -3,7 +3,7 @@ import Time from "../Time/Time";
 import DateInput from "../Date/Date";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
-import { getLoggedInUser , addSlot } from "../../lib/data-service";
+import { getLoggedInUser , addSlot , getUser} from "../../lib/data-service";
 import { toast } from "sonner";
 
 type FormValues = {
@@ -25,7 +25,8 @@ export default function CreateSlotModal({ slots,onRefresh, onClose }) {
         setLoading(true);
         const user = await getLoggedInUser();
         const normalizeTime = (time: string) => time.slice(0, 5);
-        
+        const userData = await getUser(user.id)
+
         const existingSlot = slots.find((slot) => {
         return (
           normalizeTime(slot.start_time) === data.startTime &&
@@ -33,16 +34,25 @@ export default function CreateSlotModal({ slots,onRefresh, onClose }) {
           slot.date === data.date
         );
         });
-
         if (existingSlot) {
           toast.warning("You already have a slot at this time!");
           return;
+        }
+
+        const now = new Date();
+        now.setSeconds(0, 0);
+        const slotDateTime = new Date(`${data.date} ${data.startTime}`);        
+        if (slotDateTime < now) {
+            toast.warning("You cannot create a slot in the past!");
+            return; 
         }
         const slotData = {
           date: data.date,
           start_time: data.startTime,
           end_time: data.endTime,
           provider_id: user?.id,
+          provider_name: userData?.name,
+
         };
 
         await addSlot(slotData);
@@ -59,17 +69,17 @@ export default function CreateSlotModal({ slots,onRefresh, onClose }) {
 
     if (!showModal) return null;
     return (
-      <Box sx={{ mt: 2, backgroundColor: "#ffffff", p: 4, borderRadius: 2,}}>
+      <Box sx={{ mt: 2, backgroundColor: "#ffffff", p: 4, borderRadius: 2, border:'1px solid #e3e2e2',boxShadow: "0px 2px 8px rgba(0,0,0,0.05)"}}>
         <Typography variant="h5" fontWeight={700} fontSize={20}sx={{ mb: 1 }}>
           Create New Availability Slot
         </Typography>
 
-        <Typography variant="body1" fontSize={14} sx={{mb: 4, color: "text.secondary" }}>
+        <Typography variant="body1" fontSize={17} sx={{mb: 4, color: "text.secondary" }}>
           Set your available time slots for appointments
         </Typography>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{display: "grid",gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr  1fr" },   gap: 4,   mb: 4, }}>
+          <Box sx={{display: "grid",gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr  1fr" },   gap: 4,   mb: 4, }}>
 
             <Controller
               name="date"

@@ -1,7 +1,9 @@
 import { Card, CardContent, Typography } from "@mui/material";
 import { CircularProgress } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export default function DashboardCard({ card  , loading}) {
+  const router =useRouter(  )
   return (
     <Card
       sx={{
@@ -18,8 +20,10 @@ export default function DashboardCard({ card  , loading}) {
         "&:hover": {
           boxShadow: 6,
           transform: "translateY(-5px)",
+          cursor:"pointer"
         },
       }}
+      onClick={() => router.push(card.path)}
     >
       <CardContent sx={{ p: 0, textAlign: "center" }}>
         <Typography variant="subtitle1" fontWeight={700} sx={{fontSize:"2rem"}}>

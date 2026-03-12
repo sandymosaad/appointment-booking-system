@@ -68,7 +68,7 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
       {
         cardBackgroundColor: 'rgb(248, 244, 227)',
         iconColor:'rgba(34, 26, 7, 0.48)',
-        iconBackground:"rgb(252, 245, 189);",
+        iconBackground:"rgb(252, 245, 189)",
         icon:CheckIcon,
         title:"Manage Schedule",
         body:"Track all appointments",
@@ -113,7 +113,7 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
       {
         cardBackgroundColor: 'rgb(248, 244, 227)',
         iconColor:'rgba(34, 26, 7, 0.48)',
-        iconBackground:"rgb(252, 245, 189);",
+        iconBackground:"rgb(252, 245, 189)",
         icon:CheckIcon,
         title:"Confirmed!",
         body:"Get your appointment",
@@ -132,7 +132,7 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
                 title:"Set Up",
                 body:"Providers create slots, Clients browse",
                 stepColor:'rgba(34, 26, 7, 0.48)',
-                stepBackgroundColor:"rgb(252, 245, 189);",
+                stepBackgroundColor:"rgb(252, 245, 189)",
             },
             {
                 step:3,
@@ -147,7 +147,7 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
                 title:"Manage",
                 body:"Track and manage all your appointments",
                 stepColor:'rgba(34, 26, 7, 0.48)',
-                stepBackgroundColor:"rgb(252, 245, 189);",
+                stepBackgroundColor:"rgb(252, 245, 189)",
 
             },
         ]

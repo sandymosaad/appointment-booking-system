@@ -10,12 +10,14 @@ export default function Card({cardData, stepsToWork}){
     
     >
     {!stepsToWork && <Icon sx={{ fontSize: 40 }} color={cardData.iconColor} /> }
-    {stepsToWork && <p style={{backgroundColor:cardData.stepBackgroundColor}} 
-    className={styles.stepContainer}>
-    <span className={styles.step} style={{color:cardData.stepColor}}>{cardData.step}</span>
-    </p>}
-       <h3>{cardData.title}</h3>
-        <p className={styles.para}>{cardData.body}</p>
+    {stepsToWork && 
+        <p style={{backgroundColor:cardData.stepBackgroundColor}} className={styles.stepContainer}>
+        <span className={styles.step} style={{color:cardData.stepColor}}>{cardData.step}</span>
+        </p>
+    }
+    
+    <h3>{cardData.title}</h3>
+    <p className={styles.para}>{cardData.body}</p>
     </div>
     
     </>
